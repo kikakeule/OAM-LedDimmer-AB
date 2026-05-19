@@ -19,5 +19,21 @@
         "variant": "cpp"
     },
     "platformio-ide.autoRebuildAutocompleteIndex": true,
-    "idf.portWin": "COM43"
+    "idf.portWin": "COM43",
+    "git.repositoryScanMaxDepth": 2,
+    "git.scanRepositories": [
+        "lib/knx",
+        "lib/OFM-BinaryInput",
+        "lib/OFM-ConfigTransfer",
+        "lib/OFM-FileTransferModule",
+        "lib/OFM-FunctionBlocks",
+        "lib/OFM-HclModule",
+        "lib/OFM-LedModule",
+        "lib/OFM-LogicModule",
+        "lib/OFM-SensorModule",
+        "lib/OFM-SwitchActuator",
+        "lib/OFM-VirtualButton",
+        "lib/OGM-Common",
+        "lib/OGM-SensorDevices"
+    ]
 }
