@@ -31,61 +31,59 @@
            </Static>
            <Dynamic>
             <ChannelIndependentBlock>
-              <ParameterBlock Id="%AID%_PB-nnn" Inline="true" op:moveToCommon="true">
-                <choose ParamRefId="%AID%_P-1000099_R-100009901"> <!-- Static 0 -->
-                  <when test="!=%LED_HardwareSelect%">
-                    <choose ParamRefId="%AID%_UP-2000001_R-200000101">
-                      <when test="0"> <!-- AB-SmartHouse: Const. Voltage, UP, 6-fach -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="6" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="5"> <!-- AB-SmartHouse: Const. Voltage, UP, 6-fach mit Strommessung -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="6" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000021_R-200002101" Value="1" /> <!-- HardwareVariantCanMeasure -->
-                        <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="1"> <!-- AB-SmartHouse: Const. Voltage, REG, 12-fach -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
-                        <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="6"> <!-- AB-SmartHouse: Const. Voltage, REG, 12-fach mit Strommessung -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000021_R-200002101" Value="1" /> <!-- HardwareVariantCanMeasure -->
-                        <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
-                        <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="2"> <!-- AB-SmartHouse: Const. Current, UP, 8-fach -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="8" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="3"> <!-- AB-SmartHouse: Const. Current, UP, 16-fach -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="16" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                      <when test="4"> <!-- AB-SmartHouse: Const. Current, REG, 12-fach -->
-                        <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
-                        <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
-                        <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
-                        <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
-                        <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
-                      </when>
-                    </choose>
-                  </when>
-                </choose>
-              </ParameterBlock>
+              <choose ParamRefId="%AID%_P-1000099_R-100009901"> <!-- Static 0 -->
+                <when test="!=%LED_HardwareSelect%">
+                  <choose ParamRefId="%AID%_UP-2000001_R-200000101">
+                    <when test="0"> <!-- AB-SmartHouse: Const. Voltage, UP, 6-fach -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="6" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="5"> <!-- AB-SmartHouse: Const. Voltage, UP, 6-fach mit Strommessung -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="6" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000021_R-200002101" Value="1" /> <!-- HardwareVariantCanMeasure -->
+                      <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="1"> <!-- AB-SmartHouse: Const. Voltage, REG, 12-fach -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
+                      <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="6"> <!-- AB-SmartHouse: Const. Voltage, REG, 12-fach mit Strommessung -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000021_R-200002101" Value="1" /> <!-- HardwareVariantCanMeasure -->
+                      <Assign TargetParamRefRef="%AID%_P-2000039_R-200003901" Value="1" /> <!-- HardwareVariantHasPwmFrequency -->
+                      <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="2"> <!-- AB-SmartHouse: Const. Current, UP, 8-fach -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="8" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="3"> <!-- AB-SmartHouse: Const. Current, UP, 16-fach -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="16" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                    <when test="4"> <!-- AB-SmartHouse: Const. Current, REG, 12-fach -->
+                      <Assign TargetParamRefRef="%AID%_P-2000038_R-200003801" Value="12" /> <!-- DisplayNumChannels -->
+                      <Assign TargetParamRefRef="%AID%_P-2000040_R-200004001" Value="1" /> <!-- HardwareVariantHasCcDimmerType -->
+                      <Assign TargetParamRefRef="%AID%_P-2000041_R-200004101" Value="1" /> <!-- HardwareVariantHasFrontControl -->
+                      <Assign TargetParamRefRef="%AID%_P-2000042_R-200004201" Value="1" /> <!-- HardwareVariantHasSupplyVoltage -->
+                      <Assign TargetParamRefRef="%AID%_P-2000043_R-200004301" Value="1" /> <!-- HardwareVariantHasTemperature -->
+                    </when>
+                  </choose>
+                </when>
+              </choose>
             </ChannelIndependentBlock>
            </Dynamic>
         </ApplicationProgram>

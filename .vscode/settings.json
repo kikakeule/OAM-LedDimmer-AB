@@ -1,4 +1,8 @@
 {
+    "C_Cpp.default.configurationProvider": "platformio.platformio-ide",
+    "C_Cpp.default.intelliSenseMode": "windows-gcc-arm",
+    "C_Cpp.intelliSenseEngine": "default",
+    "clangd.enable": false,
     "files.associations": {
         "cstdint": "cpp",
         "ostream": "cpp",
@@ -14,5 +18,6 @@
         "type_traits": "cpp",
         "variant": "cpp"
     },
+    "platformio-ide.autoRebuildAutocompleteIndex": true,
     "idf.portWin": "COM43"
 }

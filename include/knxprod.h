@@ -12,28 +12,30 @@
 #define ETS_ModuleId_BASE 1
 #define ETS_ModuleId_UCT 2
 #define ETS_ModuleId_LED 3
-#define ETS_ModuleId_SWA 4
-#define ETS_ModuleId_BI 5
-#define ETS_ModuleId_BTN 6
-#define ETS_ModuleId_SENS 7
-#define ETS_ModuleId_LOG 8
-#define ETS_ModuleId_FCB 9
+#define ETS_ModuleId_HCL 4
+#define ETS_ModuleId_SWA 5
+#define ETS_ModuleId_BI 6
+#define ETS_ModuleId_BTN 7
+#define ETS_ModuleId_SENS 8
+#define ETS_ModuleId_LOG 9
+#define ETS_ModuleId_FCB 10
 #define MAIN_FirmwareName "LED-Dimmer (AB-SmartHouse) (dev)"
 #define MAIN_OpenKnxId 0xAF
 #define MAIN_ApplicationNumber 7
-#define MAIN_ApplicationVersion 52
+#define MAIN_ApplicationVersion 57
 #define MAIN_FirmwareRevision 0
 #define MAIN_ApplicationEncoding iso-8859-15
-#define MAIN_ParameterSize 7136
-#define MAIN_MaxKoNumber 1069
+#define MAIN_ParameterSize 10136
+#define MAIN_MaxKoNumber 1509
 #define MAIN_OrderNumber "OpenKnxLedDimmerAB"
 #define BASE_ModuleVersion 23
 #define UCT_ModuleVersion 5
 #define LED_ModuleVersion 12
+#define HCL_ModuleVersion 1
 #define SWA_ModuleVersion 1
 #define BI_ModuleVersion 2
 #define BTN_ModuleVersion 5
-#define SENS_ModuleVersion 74
+#define SENS_ModuleVersion 75
 #define LOG_ModuleVersion 66
 #define FCB_ModuleVersion 9
 // Parameter with single occurrence
@@ -105,24 +107,27 @@
 #define BASE_ModuleEnabled_LED                   110      // 1 Bit, Bit 5
 #define     BASE_ModuleEnabled_LEDMask 0x20
 #define     BASE_ModuleEnabled_LEDShift 5
-#define BASE_ModuleEnabled_SWA                   110      // 1 Bit, Bit 4
-#define     BASE_ModuleEnabled_SWAMask 0x10
-#define     BASE_ModuleEnabled_SWAShift 4
-#define BASE_ModuleEnabled_BI                    110      // 1 Bit, Bit 3
-#define     BASE_ModuleEnabled_BIMask 0x08
-#define     BASE_ModuleEnabled_BIShift 3
-#define BASE_ModuleEnabled_BTN                   110      // 1 Bit, Bit 2
-#define     BASE_ModuleEnabled_BTNMask 0x04
-#define     BASE_ModuleEnabled_BTNShift 2
-#define BASE_ModuleEnabled_SENS                  110      // 1 Bit, Bit 1
-#define     BASE_ModuleEnabled_SENSMask 0x02
-#define     BASE_ModuleEnabled_SENSShift 1
-#define BASE_ModuleEnabled_LOG                   110      // 1 Bit, Bit 0
-#define     BASE_ModuleEnabled_LOGMask 0x01
-#define     BASE_ModuleEnabled_LOGShift 0
-#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 7
-#define     BASE_ModuleEnabled_FCBMask 0x80
-#define     BASE_ModuleEnabled_FCBShift 7
+#define BASE_ModuleEnabled_HCL                   110      // 1 Bit, Bit 4
+#define     BASE_ModuleEnabled_HCLMask 0x10
+#define     BASE_ModuleEnabled_HCLShift 4
+#define BASE_ModuleEnabled_SWA                   110      // 1 Bit, Bit 3
+#define     BASE_ModuleEnabled_SWAMask 0x08
+#define     BASE_ModuleEnabled_SWAShift 3
+#define BASE_ModuleEnabled_BI                    110      // 1 Bit, Bit 2
+#define     BASE_ModuleEnabled_BIMask 0x04
+#define     BASE_ModuleEnabled_BIShift 2
+#define BASE_ModuleEnabled_BTN                   110      // 1 Bit, Bit 1
+#define     BASE_ModuleEnabled_BTNMask 0x02
+#define     BASE_ModuleEnabled_BTNShift 1
+#define BASE_ModuleEnabled_SENS                  110      // 1 Bit, Bit 0
+#define     BASE_ModuleEnabled_SENSMask 0x01
+#define     BASE_ModuleEnabled_SENSShift 0
+#define BASE_ModuleEnabled_LOG                   111      // 1 Bit, Bit 7
+#define     BASE_ModuleEnabled_LOGMask 0x80
+#define     BASE_ModuleEnabled_LOGShift 7
+#define BASE_ModuleEnabled_FCB                   111      // 1 Bit, Bit 6
+#define     BASE_ModuleEnabled_FCBMask 0x40
+#define     BASE_ModuleEnabled_FCBShift 6
 
 // Zeitbasis
 #define ParamBASE_StartupDelayBase                    ((knx.paramByte(BASE_StartupDelayBase) & BASE_StartupDelayBaseMask) >> BASE_StartupDelayBaseShift)
@@ -183,6 +188,8 @@
 #define ParamBASE_ModuleEnabled_UCT                   ((bool)(knx.paramByte(BASE_ModuleEnabled_UCT) & BASE_ModuleEnabled_UCTMask))
 // LED
 #define ParamBASE_ModuleEnabled_LED                   ((bool)(knx.paramByte(BASE_ModuleEnabled_LED) & BASE_ModuleEnabled_LEDMask))
+// HCL
+#define ParamBASE_ModuleEnabled_HCL                   ((bool)(knx.paramByte(BASE_ModuleEnabled_HCL) & BASE_ModuleEnabled_HCLMask))
 // SWA
 #define ParamBASE_ModuleEnabled_SWA                   ((bool)(knx.paramByte(BASE_ModuleEnabled_SWA) & BASE_ModuleEnabled_SWAMask))
 // BI
@@ -452,7 +459,7 @@
 
 // Parameter per channel
 #define LED_SC_ParamBlockOffset 261
-#define LED_SC_ParamBlockSize 89
+#define LED_SC_ParamBlockSize 106
 #define LED_SC_ParamCalcIndex(index) (index + LED_SC_ParamBlockOffset + _channelIndex * LED_SC_ParamBlockSize)
 
 #define LED_SC_ChLightDimmDayOnTime                 0      // uint16_t
@@ -469,6 +476,9 @@
 #define LED_SC_ChStartupBehavior                   13      // 2 Bits, Bit 4-3
 #define     LED_SC_ChStartupBehaviorMask 0x18
 #define     LED_SC_ChStartupBehaviorShift 3
+#define LED_SC_ChStartupBehaviorHcl                13      // 2 Bits, Bit 4-3
+#define     LED_SC_ChStartupBehaviorHclMask 0x18
+#define     LED_SC_ChStartupBehaviorHclShift 3
 #define LED_SC_ChStatusOnOffSend                   14      // 1 Bit, Bit 7
 #define     LED_SC_ChStatusOnOffSendMask 0x80
 #define     LED_SC_ChStatusOnOffSendShift 7
@@ -751,6 +761,81 @@
 #define LED_SC_ChLampProtCableCrossSect            88      // 2 Bits, Bit 7-6
 #define     LED_SC_ChLampProtCableCrossSectMask 0xC0
 #define     LED_SC_ChLampProtCableCrossSectShift 6
+#define LED_SC_ChHclActiveInputKoActive            89      // 1 Bit, Bit 7
+#define     LED_SC_ChHclActiveInputKoActiveMask 0x80
+#define     LED_SC_ChHclActiveInputKoActiveShift 7
+#define LED_SC_ChHclActiveInputKoKind              89      // 1 Bit, Bit 6
+#define     LED_SC_ChHclActiveInputKoKindMask 0x40
+#define     LED_SC_ChHclActiveInputKoKindShift 6
+#define LED_SC_ChHclBrightnessInputKoActive        89      // 1 Bit, Bit 5
+#define     LED_SC_ChHclBrightnessInputKoActiveMask 0x20
+#define     LED_SC_ChHclBrightnessInputKoActiveShift 5
+#define LED_SC_ChHclBrightnessInputKoKind          89      // 1 Bit, Bit 4
+#define     LED_SC_ChHclBrightnessInputKoKindMask 0x10
+#define     LED_SC_ChHclBrightnessInputKoKindShift 4
+#define LED_SC_ChHclStatusActiveKo                 89      // 1 Bit, Bit 3
+#define     LED_SC_ChHclStatusActiveKoMask 0x08
+#define     LED_SC_ChHclStatusActiveKoShift 3
+#define LED_SC_ChHclStatusManualKo                 89      // 1 Bit, Bit 2
+#define     LED_SC_ChHclStatusManualKoMask 0x04
+#define     LED_SC_ChHclStatusManualKoShift 2
+#define LED_SC_ChHclActivateOnStartup              89      // 2 Bits, Bit 1-0
+#define     LED_SC_ChHclActivateOnStartupMask 0x03
+#define     LED_SC_ChHclActivateOnStartupShift 0
+#define LED_SC_ChHclActiveInputKoNumber            90      // uint16_t
+#define LED_SC_ChHclBrightnessInputKoNumber        92      // uint16_t
+#define LED_SC_ChHclBrightnessManualPolicy         94      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclBrightnessManualPolicyMask 0xC0
+#define     LED_SC_ChHclBrightnessManualPolicyShift 6
+#define LED_SC_ChHclBrightnessResumeMode           94      // 3 Bits, Bit 5-3
+#define     LED_SC_ChHclBrightnessResumeModeMask 0x38
+#define     LED_SC_ChHclBrightnessResumeModeShift 3
+#define LED_SC_ChHclSceneResumeMode                94      // 3 Bits, Bit 2-0
+#define     LED_SC_ChHclSceneResumeModeMask 0x07
+#define     LED_SC_ChHclSceneResumeModeShift 0
+#define LED_SC_ChHclMissingFallback                95      // 1 Bit, Bit 7
+#define     LED_SC_ChHclMissingFallbackMask 0x80
+#define     LED_SC_ChHclMissingFallbackShift 7
+#define LED_SC_ChHclStartBehavior                  95      // 1 Bit, Bit 6
+#define     LED_SC_ChHclStartBehaviorMask 0x40
+#define     LED_SC_ChHclStartBehaviorShift 6
+#define LED_SC_ChHclBrightnessResumeTimeBase       96      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclBrightnessResumeTimeBaseMask 0xC0
+#define     LED_SC_ChHclBrightnessResumeTimeBaseShift 6
+#define LED_SC_ChHclBrightnessResumeTime           96      // 14 Bits, Bit 13-0
+#define     LED_SC_ChHclBrightnessResumeTimeMask 0x3FFF
+#define     LED_SC_ChHclBrightnessResumeTimeShift 0
+#define LED_SC_ChHclSceneResumeTimeBase            98      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclSceneResumeTimeBaseMask 0xC0
+#define     LED_SC_ChHclSceneResumeTimeBaseShift 6
+#define LED_SC_ChHclSceneResumeTime                98      // 14 Bits, Bit 13-0
+#define     LED_SC_ChHclSceneResumeTimeMask 0x3FFF
+#define     LED_SC_ChHclSceneResumeTimeShift 0
+#define LED_SC_ChHclSwitchOnBehavior               100      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclSwitchOnBehaviorMask 0xC0
+#define     LED_SC_ChHclSwitchOnBehaviorShift 6
+#define LED_SC_ChHclSecondOnBehavior               100      // 2 Bits, Bit 5-4
+#define     LED_SC_ChHclSecondOnBehaviorMask 0x30
+#define     LED_SC_ChHclSecondOnBehaviorShift 4
+#define LED_SC_ChHclEnabled                        100      // 1 Bit, Bit 3
+#define     LED_SC_ChHclEnabledMask 0x08
+#define     LED_SC_ChHclEnabledShift 3
+#define LED_SC_ChHclReadOnStartup                  100      // 2 Bits, Bit 2-1
+#define     LED_SC_ChHclReadOnStartupMask 0x06
+#define     LED_SC_ChHclReadOnStartupShift 1
+#define LED_SC_ChHclSecondOnBrightness             101      // uint8_t
+#define LED_SC_ChHclStatusActiveBase               102      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclStatusActiveBaseMask 0xC0
+#define     LED_SC_ChHclStatusActiveBaseShift 6
+#define LED_SC_ChHclStatusActiveTime               102      // 14 Bits, Bit 13-0
+#define     LED_SC_ChHclStatusActiveTimeMask 0x3FFF
+#define     LED_SC_ChHclStatusActiveTimeShift 0
+#define LED_SC_ChHclStatusManualBase               104      // 2 Bits, Bit 7-6
+#define     LED_SC_ChHclStatusManualBaseMask 0xC0
+#define     LED_SC_ChHclStatusManualBaseShift 6
+#define LED_SC_ChHclStatusManualTime               104      // 14 Bits, Bit 13-0
+#define     LED_SC_ChHclStatusManualTimeMask 0x3FFF
+#define     LED_SC_ChHclStatusManualTimeShift 0
 
 // Dimmzeit Tag An
 #define ParamLED_SC_ChLightDimmDayOnTime                (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChLightDimmDayOnTime)))
@@ -772,6 +857,8 @@
 #define ParamLED_SC_ChDimCurve                          ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChDimCurve)) & LED_SC_ChDimCurveMask) >> LED_SC_ChDimCurveShift)
 // Einschaltverhalten
 #define ParamLED_SC_ChStartupBehavior                   ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChStartupBehavior)) & LED_SC_ChStartupBehaviorMask) >> LED_SC_ChStartupBehaviorShift)
+// Einschaltverhalten bei Uebersteuern
+#define ParamLED_SC_ChStartupBehaviorHcl                ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChStartupBehaviorHcl)) & LED_SC_ChStartupBehaviorHclMask) >> LED_SC_ChStartupBehaviorHclShift)
 // Status Ein/Aus senden
 #define ParamLED_SC_ChStatusOnOffSend                   ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChStatusOnOffSend)) & LED_SC_ChStatusOnOffSendMask))
 // Status Helligkeit senden
@@ -1010,13 +1097,75 @@
 #define ParamLED_SC_ChLampProtOverloadPercent           (knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChLampProtOverloadPercent)))
 // Leiterquerschnitt
 #define ParamLED_SC_ChLampProtCableCrossSect            ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChLampProtCableCrossSect)) & LED_SC_ChLampProtCableCrossSectMask) >> LED_SC_ChLampProtCableCrossSectShift)
+// HCL Aktiv-KO verwenden
+#define ParamLED_SC_ChHclActiveInputKoActive            ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclActiveInputKoActive)) & LED_SC_ChHclActiveInputKoActiveMask))
+// Quelle des Aktiv-KO
+#define ParamLED_SC_ChHclActiveInputKoKind              ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclActiveInputKoKind)) & LED_SC_ChHclActiveInputKoKindMask))
+// HCL Soll-Helligkeit-KO verwenden
+#define ParamLED_SC_ChHclBrightnessInputKoActive        ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessInputKoActive)) & LED_SC_ChHclBrightnessInputKoActiveMask))
+// Quelle des Helligkeits-KO
+#define ParamLED_SC_ChHclBrightnessInputKoKind          ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessInputKoKind)) & LED_SC_ChHclBrightnessInputKoKindMask))
+// Statusobjekt HCL aktiv senden
+#define ParamLED_SC_ChHclStatusActiveKo                 ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusActiveKo)) & LED_SC_ChHclStatusActiveKoMask))
+// Statusobjekt Quelle aktuell manuell senden
+#define ParamLED_SC_ChHclStatusManualKo                 ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusManualKo)) & LED_SC_ChHclStatusManualKoMask))
+// HCL aktiv setzen bei
+#define ParamLED_SC_ChHclActivateOnStartup              (knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclActivateOnStartup)) & LED_SC_ChHclActivateOnStartupMask)
+// Nummer des Aktiv-KO
+#define ParamLED_SC_ChHclActiveInputKoNumber            (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclActiveInputKoNumber)))
+// Nummer des Helligkeits-KO
+#define ParamLED_SC_ChHclBrightnessInputKoNumber        (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessInputKoNumber)))
+// Lokale Helligkeits-Eingaenge im HCL-Modus
+#define ParamLED_SC_ChHclBrightnessManualPolicy         ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessManualPolicy)) & LED_SC_ChHclBrightnessManualPolicyMask) >> LED_SC_ChHclBrightnessManualPolicyShift)
+// Rueckkehr nach lokalem Helligkeits-Override
+#define ParamLED_SC_ChHclBrightnessResumeMode           ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessResumeMode)) & LED_SC_ChHclBrightnessResumeModeMask) >> LED_SC_ChHclBrightnessResumeModeShift)
+// Rueckkehr nach lokaler Szene
+#define ParamLED_SC_ChHclSceneResumeMode                (knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclSceneResumeMode)) & LED_SC_ChHclSceneResumeModeMask)
+// Fallback ohne HCL-Sollwert
+#define ParamLED_SC_ChHclMissingFallback                ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclMissingFallback)) & LED_SC_ChHclMissingFallbackMask))
+// Verhalten bei HCL-Start
+#define ParamLED_SC_ChHclStartBehavior                  ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclStartBehavior)) & LED_SC_ChHclStartBehaviorMask))
+// Zeitbasis
+#define ParamLED_SC_ChHclBrightnessResumeTimeBase       ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessResumeTimeBase)) & LED_SC_ChHclBrightnessResumeTimeBaseMask) >> LED_SC_ChHclBrightnessResumeTimeBaseShift)
+// Zeit
+#define ParamLED_SC_ChHclBrightnessResumeTime           (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessResumeTime)) & LED_SC_ChHclBrightnessResumeTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_SC_ChHclBrightnessResumeTimeMS         (paramDelay(knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclBrightnessResumeTime))))
+// Zeitbasis
+#define ParamLED_SC_ChHclSceneResumeTimeBase            ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclSceneResumeTimeBase)) & LED_SC_ChHclSceneResumeTimeBaseMask) >> LED_SC_ChHclSceneResumeTimeBaseShift)
+// Zeit
+#define ParamLED_SC_ChHclSceneResumeTime                (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclSceneResumeTime)) & LED_SC_ChHclSceneResumeTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_SC_ChHclSceneResumeTimeMS              (paramDelay(knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclSceneResumeTime))))
+// Einschaltverhalten
+#define ParamLED_SC_ChHclSwitchOnBehavior               ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclSwitchOnBehavior)) & LED_SC_ChHclSwitchOnBehaviorMask) >> LED_SC_ChHclSwitchOnBehaviorShift)
+// Verhalten bei zweitem EIN
+#define ParamLED_SC_ChHclSecondOnBehavior               ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclSecondOnBehavior)) & LED_SC_ChHclSecondOnBehaviorMask) >> LED_SC_ChHclSecondOnBehaviorShift)
+// HCL aktivieren
+#define ParamLED_SC_ChHclEnabled                        ((bool)(knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclEnabled)) & LED_SC_ChHclEnabledMask))
+// HCL KO Lesen bei
+#define ParamLED_SC_ChHclReadOnStartup                  ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclReadOnStartup)) & LED_SC_ChHclReadOnStartupMask) >> LED_SC_ChHclReadOnStartupShift)
+// Vorgegebene Helligkeit
+#define ParamLED_SC_ChHclSecondOnBrightness             (knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclSecondOnBrightness)))
+// Zeitbasis
+#define ParamLED_SC_ChHclStatusActiveBase               ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusActiveBase)) & LED_SC_ChHclStatusActiveBaseMask) >> LED_SC_ChHclStatusActiveBaseShift)
+// Zeit
+#define ParamLED_SC_ChHclStatusActiveTime               (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusActiveTime)) & LED_SC_ChHclStatusActiveTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_SC_ChHclStatusActiveTimeMS             (paramDelay(knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusActiveTime))))
+// Zeitbasis
+#define ParamLED_SC_ChHclStatusManualBase               ((knx.paramByte(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusManualBase)) & LED_SC_ChHclStatusManualBaseMask) >> LED_SC_ChHclStatusManualBaseShift)
+// Zeit
+#define ParamLED_SC_ChHclStatusManualTime               (knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusManualTime)) & LED_SC_ChHclStatusManualTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_SC_ChHclStatusManualTimeMS             (paramDelay(knx.paramWord(LED_SC_ParamCalcIndex(LED_SC_ChHclStatusManualTime))))
 
 // deprecated
 #define LED_SC_KoOffset 30
 
 // Communication objects per channel (multiple occurrence)
 #define LED_SC_KoBlockOffset 30
-#define LED_SC_KoBlockSize 16
+#define LED_SC_KoBlockSize 25
 
 #define LED_SC_KoCalcNumber(index) (index + LED_SC_KoBlockOffset + _channelIndex * LED_SC_KoBlockSize)
 #define LED_SC_KoCalcIndex(number) ((number >= LED_SC_KoCalcNumber(0) && number < LED_SC_KoCalcNumber(LED_SC_KoBlockSize)) ? (number - LED_SC_KoBlockOffset) % LED_SC_KoBlockSize : -1)
@@ -1038,6 +1187,15 @@
 #define LED_SC_KoChDeviceProtOverload 13
 #define LED_SC_KoChLampProtConstCurrent 14
 #define LED_SC_KoChLampProtOverload 15
+#define LED_SC_KoChHclActiveStatus 16
+#define LED_SC_KoChHclManualOverrideStatus 17
+#define LED_SC_KoChHclActiveInput 18
+#define LED_SC_KoChHclBrightnessInput 19
+#define LED_SC_KoChReserved20 20
+#define LED_SC_KoChReserved21 21
+#define LED_SC_KoChReserved22 22
+#define LED_SC_KoChReserved23 23
+#define LED_SC_KoChReserved24 24
 
 // Schalten
 #define KoLED_SC_ChSwitch                            (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChSwitch)))
@@ -1071,12 +1229,30 @@
 #define KoLED_SC_ChLampProtConstCurrent              (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChLampProtConstCurrent)))
 // Leuchtmittelschutz, Maximallast überschritten
 #define KoLED_SC_ChLampProtOverload                  (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChLampProtOverload)))
+// HCL aktiv Status
+#define KoLED_SC_ChHclActiveStatus                   (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChHclActiveStatus)))
+// Quelle manuell Status
+#define KoLED_SC_ChHclManualOverrideStatus           (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChHclManualOverrideStatus)))
+// HCL aktiv
+#define KoLED_SC_ChHclActiveInput                    (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChHclActiveInput)))
+// HCL Soll-Helligkeit
+#define KoLED_SC_ChHclBrightnessInput                (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChHclBrightnessInput)))
+// Reserviert
+#define KoLED_SC_ChReserved20                        (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChReserved20)))
+// Reserviert
+#define KoLED_SC_ChReserved21                        (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChReserved21)))
+// Reserviert
+#define KoLED_SC_ChReserved22                        (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChReserved22)))
+// Reserviert
+#define KoLED_SC_ChReserved23                        (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChReserved23)))
+// Reserviert
+#define KoLED_SC_ChReserved24                        (knx.getGroupObject(LED_SC_KoCalcNumber(LED_SC_KoChReserved24)))
 
 #define LED_TW_ChannelCount 8
 
 // Parameter per channel
-#define LED_TW_ParamBlockOffset 1685
-#define LED_TW_ParamBlockSize 102
+#define LED_TW_ParamBlockOffset 1957
+#define LED_TW_ParamBlockSize 129
 #define LED_TW_ParamCalcIndex(index) (index + LED_TW_ParamBlockOffset + _channelIndex * LED_TW_ParamBlockSize)
 
 #define LED_TW_ChLightDimmDayOnTime                 0      // uint16_t
@@ -1093,6 +1269,9 @@
 #define LED_TW_ChStartupBehavior                   13      // 2 Bits, Bit 4-3
 #define     LED_TW_ChStartupBehaviorMask 0x18
 #define     LED_TW_ChStartupBehaviorShift 3
+#define LED_TW_ChStartupBehaviorHcl                13      // 2 Bits, Bit 4-3
+#define     LED_TW_ChStartupBehaviorHclMask 0x18
+#define     LED_TW_ChStartupBehaviorHclShift 3
 #define LED_TW_ChStatusOnOffSend                   14      // 1 Bit, Bit 7
 #define     LED_TW_ChStatusOnOffSendMask 0x80
 #define     LED_TW_ChStatusOnOffSendShift 7
@@ -1398,6 +1577,108 @@
 #define LED_TW_ChLampProtCableCrossSect            101      // 2 Bits, Bit 7-6
 #define     LED_TW_ChLampProtCableCrossSectMask 0xC0
 #define     LED_TW_ChLampProtCableCrossSectShift 6
+#define LED_TW_ChHclActiveInputKoActive            102      // 1 Bit, Bit 7
+#define     LED_TW_ChHclActiveInputKoActiveMask 0x80
+#define     LED_TW_ChHclActiveInputKoActiveShift 7
+#define LED_TW_ChHclActiveInputKoKind              102      // 1 Bit, Bit 6
+#define     LED_TW_ChHclActiveInputKoKindMask 0x40
+#define     LED_TW_ChHclActiveInputKoKindShift 6
+#define LED_TW_ChHclBrightnessInputKoActive        102      // 1 Bit, Bit 5
+#define     LED_TW_ChHclBrightnessInputKoActiveMask 0x20
+#define     LED_TW_ChHclBrightnessInputKoActiveShift 5
+#define LED_TW_ChHclBrightnessInputKoKind          102      // 1 Bit, Bit 4
+#define     LED_TW_ChHclBrightnessInputKoKindMask 0x10
+#define     LED_TW_ChHclBrightnessInputKoKindShift 4
+#define LED_TW_ChHclColorTemperatureInputKoActive  102      // 1 Bit, Bit 3
+#define     LED_TW_ChHclColorTemperatureInputKoActiveMask 0x08
+#define     LED_TW_ChHclColorTemperatureInputKoActiveShift 3
+#define LED_TW_ChHclColorTemperatureInputKoKind    102      // 1 Bit, Bit 2
+#define     LED_TW_ChHclColorTemperatureInputKoKindMask 0x04
+#define     LED_TW_ChHclColorTemperatureInputKoKindShift 2
+#define LED_TW_ChHclCombinedInputKoActive          102      // 1 Bit, Bit 1
+#define     LED_TW_ChHclCombinedInputKoActiveMask 0x02
+#define     LED_TW_ChHclCombinedInputKoActiveShift 1
+#define LED_TW_ChHclCombinedInputKoKind            102      // 1 Bit, Bit 0
+#define     LED_TW_ChHclCombinedInputKoKindMask 0x01
+#define     LED_TW_ChHclCombinedInputKoKindShift 0
+#define LED_TW_ChHclStatusActiveKo                 103      // 1 Bit, Bit 7
+#define     LED_TW_ChHclStatusActiveKoMask 0x80
+#define     LED_TW_ChHclStatusActiveKoShift 7
+#define LED_TW_ChHclStatusManualKo                 103      // 1 Bit, Bit 6
+#define     LED_TW_ChHclStatusManualKoMask 0x40
+#define     LED_TW_ChHclStatusManualKoShift 6
+#define LED_TW_ChHclActivateOnStartup              103      // 2 Bits, Bit 5-4
+#define     LED_TW_ChHclActivateOnStartupMask 0x30
+#define     LED_TW_ChHclActivateOnStartupShift 4
+#define LED_TW_ChHclActiveInputKoNumber            104      // uint16_t
+#define LED_TW_ChHclBrightnessInputKoNumber        106      // uint16_t
+#define LED_TW_ChHclColorTemperatureInputKoNumber  108      // uint16_t
+#define LED_TW_ChHclCombinedInputKoNumber          110      // uint16_t
+#define LED_TW_ChHclBrightnessManualPolicy         112      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclBrightnessManualPolicyMask 0xC0
+#define     LED_TW_ChHclBrightnessManualPolicyShift 6
+#define LED_TW_ChHclBrightnessResumeMode           112      // 3 Bits, Bit 5-3
+#define     LED_TW_ChHclBrightnessResumeModeMask 0x38
+#define     LED_TW_ChHclBrightnessResumeModeShift 3
+#define LED_TW_ChHclTemperatureManualPolicy        112      // 2 Bits, Bit 2-1
+#define     LED_TW_ChHclTemperatureManualPolicyMask 0x06
+#define     LED_TW_ChHclTemperatureManualPolicyShift 1
+#define LED_TW_ChHclTemperatureResumeMode          113      // 3 Bits, Bit 7-5
+#define     LED_TW_ChHclTemperatureResumeModeMask 0xE0
+#define     LED_TW_ChHclTemperatureResumeModeShift 5
+#define LED_TW_ChHclBrightnessResumeTimeBase       114      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclBrightnessResumeTimeBaseMask 0xC0
+#define     LED_TW_ChHclBrightnessResumeTimeBaseShift 6
+#define LED_TW_ChHclBrightnessResumeTime           114      // 14 Bits, Bit 13-0
+#define     LED_TW_ChHclBrightnessResumeTimeMask 0x3FFF
+#define     LED_TW_ChHclBrightnessResumeTimeShift 0
+#define LED_TW_ChHclTemperatureResumeTimeBase      116      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclTemperatureResumeTimeBaseMask 0xC0
+#define     LED_TW_ChHclTemperatureResumeTimeBaseShift 6
+#define LED_TW_ChHclTemperatureResumeTime          116      // 14 Bits, Bit 13-0
+#define     LED_TW_ChHclTemperatureResumeTimeMask 0x3FFF
+#define     LED_TW_ChHclTemperatureResumeTimeShift 0
+#define LED_TW_ChHclSceneResumeMode                118      // 3 Bits, Bit 7-5
+#define     LED_TW_ChHclSceneResumeModeMask 0xE0
+#define     LED_TW_ChHclSceneResumeModeShift 5
+#define LED_TW_ChHclMissingFallback                118      // 1 Bit, Bit 4
+#define     LED_TW_ChHclMissingFallbackMask 0x10
+#define     LED_TW_ChHclMissingFallbackShift 4
+#define LED_TW_ChHclStartBehavior                  118      // 1 Bit, Bit 3
+#define     LED_TW_ChHclStartBehaviorMask 0x08
+#define     LED_TW_ChHclStartBehaviorShift 3
+#define LED_TW_ChHclSwitchOnBehavior               118      // 2 Bits, Bit 2-1
+#define     LED_TW_ChHclSwitchOnBehaviorMask 0x06
+#define     LED_TW_ChHclSwitchOnBehaviorShift 1
+#define LED_TW_ChHclSceneResumeTimeBase            119      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclSceneResumeTimeBaseMask 0xC0
+#define     LED_TW_ChHclSceneResumeTimeBaseShift 6
+#define LED_TW_ChHclSceneResumeTime                119      // 14 Bits, Bit 13-0
+#define     LED_TW_ChHclSceneResumeTimeMask 0x3FFF
+#define     LED_TW_ChHclSceneResumeTimeShift 0
+#define LED_TW_ChHclSecondOnBehavior               121      // 3 Bits, Bit 7-5
+#define     LED_TW_ChHclSecondOnBehaviorMask 0xE0
+#define     LED_TW_ChHclSecondOnBehaviorShift 5
+#define LED_TW_ChHclEnabled                        121      // 1 Bit, Bit 4
+#define     LED_TW_ChHclEnabledMask 0x10
+#define     LED_TW_ChHclEnabledShift 4
+#define LED_TW_ChHclReadOnStartup                  121      // 2 Bits, Bit 3-2
+#define     LED_TW_ChHclReadOnStartupMask 0x0C
+#define     LED_TW_ChHclReadOnStartupShift 2
+#define LED_TW_ChHclSecondOnBrightness             122      // uint8_t
+#define LED_TW_ChHclSecondOnColorTemperature       123      // uint16_t
+#define LED_TW_ChHclStatusActiveBase               125      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclStatusActiveBaseMask 0xC0
+#define     LED_TW_ChHclStatusActiveBaseShift 6
+#define LED_TW_ChHclStatusActiveTime               125      // 14 Bits, Bit 13-0
+#define     LED_TW_ChHclStatusActiveTimeMask 0x3FFF
+#define     LED_TW_ChHclStatusActiveTimeShift 0
+#define LED_TW_ChHclStatusManualBase               127      // 2 Bits, Bit 7-6
+#define     LED_TW_ChHclStatusManualBaseMask 0xC0
+#define     LED_TW_ChHclStatusManualBaseShift 6
+#define LED_TW_ChHclStatusManualTime               127      // 14 Bits, Bit 13-0
+#define     LED_TW_ChHclStatusManualTimeMask 0x3FFF
+#define     LED_TW_ChHclStatusManualTimeShift 0
 
 // Dimmzeit Tag An
 #define ParamLED_TW_ChLightDimmDayOnTime                (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChLightDimmDayOnTime)))
@@ -1419,6 +1700,8 @@
 #define ParamLED_TW_ChDimCurve                          ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChDimCurve)) & LED_TW_ChDimCurveMask) >> LED_TW_ChDimCurveShift)
 // Einschaltverhalten
 #define ParamLED_TW_ChStartupBehavior                   ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChStartupBehavior)) & LED_TW_ChStartupBehaviorMask) >> LED_TW_ChStartupBehaviorShift)
+// Einschaltverhalten bei Uebersteuern
+#define ParamLED_TW_ChStartupBehaviorHcl                ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChStartupBehaviorHcl)) & LED_TW_ChStartupBehaviorHclMask) >> LED_TW_ChStartupBehaviorHclShift)
 // Status Ein/Aus senden
 #define ParamLED_TW_ChStatusOnOffSend                   ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChStatusOnOffSend)) & LED_TW_ChStatusOnOffSendMask))
 // Status Helligkeit senden
@@ -1693,13 +1976,99 @@
 #define ParamLED_TW_ChLampProtOverloadPercent           (knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChLampProtOverloadPercent)))
 // Leiterquerschnitt
 #define ParamLED_TW_ChLampProtCableCrossSect            ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChLampProtCableCrossSect)) & LED_TW_ChLampProtCableCrossSectMask) >> LED_TW_ChLampProtCableCrossSectShift)
+// HCL Aktiv-KO verwenden
+#define ParamLED_TW_ChHclActiveInputKoActive            ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclActiveInputKoActive)) & LED_TW_ChHclActiveInputKoActiveMask))
+// Quelle des Aktiv-KO
+#define ParamLED_TW_ChHclActiveInputKoKind              ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclActiveInputKoKind)) & LED_TW_ChHclActiveInputKoKindMask))
+// HCL Helligkeit verwenden
+#define ParamLED_TW_ChHclBrightnessInputKoActive        ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessInputKoActive)) & LED_TW_ChHclBrightnessInputKoActiveMask))
+// Quelle des HCL-Helligkeits-KO
+#define ParamLED_TW_ChHclBrightnessInputKoKind          ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessInputKoKind)) & LED_TW_ChHclBrightnessInputKoKindMask))
+// HCL Farbtemperatur verwenden
+#define ParamLED_TW_ChHclColorTemperatureInputKoActive  ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclColorTemperatureInputKoActive)) & LED_TW_ChHclColorTemperatureInputKoActiveMask))
+// Quelle des HCL-Farbtemperatur-KO
+#define ParamLED_TW_ChHclColorTemperatureInputKoKind    ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclColorTemperatureInputKoKind)) & LED_TW_ChHclColorTemperatureInputKoKindMask))
+// HCL Sollwert kombiniert verwenden
+#define ParamLED_TW_ChHclCombinedInputKoActive          ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclCombinedInputKoActive)) & LED_TW_ChHclCombinedInputKoActiveMask))
+// Quelle des kombinierten HCL-Soll-KO
+#define ParamLED_TW_ChHclCombinedInputKoKind            ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclCombinedInputKoKind)) & LED_TW_ChHclCombinedInputKoKindMask))
+// Statusobjekt HCL aktiv senden
+#define ParamLED_TW_ChHclStatusActiveKo                 ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusActiveKo)) & LED_TW_ChHclStatusActiveKoMask))
+// Statusobjekt Quelle aktuell manuell senden
+#define ParamLED_TW_ChHclStatusManualKo                 ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusManualKo)) & LED_TW_ChHclStatusManualKoMask))
+// HCL aktiv setzen bei
+#define ParamLED_TW_ChHclActivateOnStartup              ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclActivateOnStartup)) & LED_TW_ChHclActivateOnStartupMask) >> LED_TW_ChHclActivateOnStartupShift)
+// Nummer des Aktiv-KO
+#define ParamLED_TW_ChHclActiveInputKoNumber            (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclActiveInputKoNumber)))
+// Nummer des HCL-Helligkeits-KO
+#define ParamLED_TW_ChHclBrightnessInputKoNumber        (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessInputKoNumber)))
+// Nummer des HCL-Farbtemperatur-KO
+#define ParamLED_TW_ChHclColorTemperatureInputKoNumber  (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclColorTemperatureInputKoNumber)))
+// Nummer des kombinierten HCL-Soll-KO
+#define ParamLED_TW_ChHclCombinedInputKoNumber          (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclCombinedInputKoNumber)))
+// Lokale Helligkeits-Eingaenge im HCL-Modus
+#define ParamLED_TW_ChHclBrightnessManualPolicy         ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessManualPolicy)) & LED_TW_ChHclBrightnessManualPolicyMask) >> LED_TW_ChHclBrightnessManualPolicyShift)
+// Rueckkehr nach lokalem Helligkeits-Override
+#define ParamLED_TW_ChHclBrightnessResumeMode           ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessResumeMode)) & LED_TW_ChHclBrightnessResumeModeMask) >> LED_TW_ChHclBrightnessResumeModeShift)
+// Lokale Farbtemperatur-Eingaenge im HCL-Modus
+#define ParamLED_TW_ChHclTemperatureManualPolicy        ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclTemperatureManualPolicy)) & LED_TW_ChHclTemperatureManualPolicyMask) >> LED_TW_ChHclTemperatureManualPolicyShift)
+// Rueckkehr nach lokalem Farbtemperatur-Override
+#define ParamLED_TW_ChHclTemperatureResumeMode          ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclTemperatureResumeMode)) & LED_TW_ChHclTemperatureResumeModeMask) >> LED_TW_ChHclTemperatureResumeModeShift)
+// Zeitbasis
+#define ParamLED_TW_ChHclBrightnessResumeTimeBase       ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessResumeTimeBase)) & LED_TW_ChHclBrightnessResumeTimeBaseMask) >> LED_TW_ChHclBrightnessResumeTimeBaseShift)
+// Zeit
+#define ParamLED_TW_ChHclBrightnessResumeTime           (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessResumeTime)) & LED_TW_ChHclBrightnessResumeTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_TW_ChHclBrightnessResumeTimeMS         (paramDelay(knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclBrightnessResumeTime))))
+// Zeitbasis
+#define ParamLED_TW_ChHclTemperatureResumeTimeBase      ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclTemperatureResumeTimeBase)) & LED_TW_ChHclTemperatureResumeTimeBaseMask) >> LED_TW_ChHclTemperatureResumeTimeBaseShift)
+// Zeit
+#define ParamLED_TW_ChHclTemperatureResumeTime          (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclTemperatureResumeTime)) & LED_TW_ChHclTemperatureResumeTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_TW_ChHclTemperatureResumeTimeMS        (paramDelay(knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclTemperatureResumeTime))))
+// Rueckkehr nach lokaler Szene
+#define ParamLED_TW_ChHclSceneResumeMode                ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclSceneResumeMode)) & LED_TW_ChHclSceneResumeModeMask) >> LED_TW_ChHclSceneResumeModeShift)
+// Fallback ohne HCL-Sollwert
+#define ParamLED_TW_ChHclMissingFallback                ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclMissingFallback)) & LED_TW_ChHclMissingFallbackMask))
+// Verhalten bei HCL-Start
+#define ParamLED_TW_ChHclStartBehavior                  ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclStartBehavior)) & LED_TW_ChHclStartBehaviorMask))
+// Einschaltverhalten
+#define ParamLED_TW_ChHclSwitchOnBehavior               ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclSwitchOnBehavior)) & LED_TW_ChHclSwitchOnBehaviorMask) >> LED_TW_ChHclSwitchOnBehaviorShift)
+// Zeitbasis
+#define ParamLED_TW_ChHclSceneResumeTimeBase            ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclSceneResumeTimeBase)) & LED_TW_ChHclSceneResumeTimeBaseMask) >> LED_TW_ChHclSceneResumeTimeBaseShift)
+// Zeit
+#define ParamLED_TW_ChHclSceneResumeTime                (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclSceneResumeTime)) & LED_TW_ChHclSceneResumeTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_TW_ChHclSceneResumeTimeMS              (paramDelay(knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclSceneResumeTime))))
+// Verhalten bei zweitem EIN
+#define ParamLED_TW_ChHclSecondOnBehavior               ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclSecondOnBehavior)) & LED_TW_ChHclSecondOnBehaviorMask) >> LED_TW_ChHclSecondOnBehaviorShift)
+// HCL aktivieren
+#define ParamLED_TW_ChHclEnabled                        ((bool)(knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclEnabled)) & LED_TW_ChHclEnabledMask))
+// HCL KO Lesen bei
+#define ParamLED_TW_ChHclReadOnStartup                  ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclReadOnStartup)) & LED_TW_ChHclReadOnStartupMask) >> LED_TW_ChHclReadOnStartupShift)
+// Vorgegebene Helligkeit
+#define ParamLED_TW_ChHclSecondOnBrightness             (knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclSecondOnBrightness)))
+// Vorgegebene Lichttemperatur
+#define ParamLED_TW_ChHclSecondOnColorTemperature       (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclSecondOnColorTemperature)))
+// Zeitbasis
+#define ParamLED_TW_ChHclStatusActiveBase               ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusActiveBase)) & LED_TW_ChHclStatusActiveBaseMask) >> LED_TW_ChHclStatusActiveBaseShift)
+// Zeit
+#define ParamLED_TW_ChHclStatusActiveTime               (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusActiveTime)) & LED_TW_ChHclStatusActiveTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_TW_ChHclStatusActiveTimeMS             (paramDelay(knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusActiveTime))))
+// Zeitbasis
+#define ParamLED_TW_ChHclStatusManualBase               ((knx.paramByte(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusManualBase)) & LED_TW_ChHclStatusManualBaseMask) >> LED_TW_ChHclStatusManualBaseShift)
+// Zeit
+#define ParamLED_TW_ChHclStatusManualTime               (knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusManualTime)) & LED_TW_ChHclStatusManualTimeMask)
+// Zeit (in Millisekunden)
+#define ParamLED_TW_ChHclStatusManualTimeMS             (paramDelay(knx.paramWord(LED_TW_ParamCalcIndex(LED_TW_ChHclStatusManualTime))))
 
 // deprecated
-#define LED_TW_KoOffset 290
+#define LED_TW_KoOffset 430
 
 // Communication objects per channel (multiple occurrence)
-#define LED_TW_KoBlockOffset 290
-#define LED_TW_KoBlockSize 20
+#define LED_TW_KoBlockOffset 430
+#define LED_TW_KoBlockSize 30
 
 #define LED_TW_KoCalcNumber(index) (index + LED_TW_KoBlockOffset + _channelIndex * LED_TW_KoBlockSize)
 #define LED_TW_KoCalcIndex(number) ((number >= LED_TW_KoCalcNumber(0) && number < LED_TW_KoCalcNumber(LED_TW_KoBlockSize)) ? (number - LED_TW_KoBlockOffset) % LED_TW_KoBlockSize : -1)
@@ -1725,6 +2094,16 @@
 #define LED_TW_KoChDeviceProtOverload 17
 #define LED_TW_KoChLampProtConstCurrent 18
 #define LED_TW_KoChLampProtOverload 19
+#define LED_TW_KoChHclBrightnessInput 20
+#define LED_TW_KoChHclColorTemperatureInput 21
+#define LED_TW_KoChHclCombinedInput 22
+#define LED_TW_KoChHclActiveStatus 23
+#define LED_TW_KoChHclManualOverrideStatus 24
+#define LED_TW_KoChHclActiveInput 25
+#define LED_TW_KoChCombinedInput 26
+#define LED_TW_KoChReserved27 27
+#define LED_TW_KoChReserved28 28
+#define LED_TW_KoChReserved29 29
 
 // Schalten
 #define KoLED_TW_ChSwitch                            (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChSwitch)))
@@ -1766,11 +2145,31 @@
 #define KoLED_TW_ChLampProtConstCurrent              (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChLampProtConstCurrent)))
 // Leuchtmittelschutz, Maximallast überschritten
 #define KoLED_TW_ChLampProtOverload                  (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChLampProtOverload)))
+// HCL Helligkeit
+#define KoLED_TW_ChHclBrightnessInput                (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclBrightnessInput)))
+// HCL Farbtemperatur
+#define KoLED_TW_ChHclColorTemperatureInput          (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclColorTemperatureInput)))
+// HCL Sollwert kombiniert
+#define KoLED_TW_ChHclCombinedInput                  (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclCombinedInput)))
+// HCL aktiv Status
+#define KoLED_TW_ChHclActiveStatus                   (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclActiveStatus)))
+// Quelle manuell Status
+#define KoLED_TW_ChHclManualOverrideStatus           (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclManualOverrideStatus)))
+// HCL aktiv
+#define KoLED_TW_ChHclActiveInput                    (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChHclActiveInput)))
+// Dimmwert/Farbtemperatur kombiniert
+#define KoLED_TW_ChCombinedInput                     (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChCombinedInput)))
+// Reserviert
+#define KoLED_TW_ChReserved27                        (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChReserved27)))
+// Reserviert
+#define KoLED_TW_ChReserved28                        (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChReserved28)))
+// Reserviert
+#define KoLED_TW_ChReserved29                        (knx.getGroupObject(LED_TW_KoCalcNumber(LED_TW_KoChReserved29)))
 
 #define LED_RGB_ChannelCount 5
 
 // Parameter per channel
-#define LED_RGB_ParamBlockOffset 2501
+#define LED_RGB_ParamBlockOffset 2989
 #define LED_RGB_ParamBlockSize 110
 #define LED_RGB_ParamCalcIndex(index) (index + LED_RGB_ParamBlockOffset + _channelIndex * LED_RGB_ParamBlockSize)
 
@@ -2526,10 +2925,10 @@
 #define ParamLED_RGB_ChLampProtCableCrossSect            ((knx.paramByte(LED_RGB_ParamCalcIndex(LED_RGB_ChLampProtCableCrossSect)) & LED_RGB_ChLampProtCableCrossSectMask) >> LED_RGB_ChLampProtCableCrossSectShift)
 
 // deprecated
-#define LED_RGB_KoOffset 450
+#define LED_RGB_KoOffset 670
 
 // Communication objects per channel (multiple occurrence)
-#define LED_RGB_KoBlockOffset 450
+#define LED_RGB_KoBlockOffset 670
 #define LED_RGB_KoBlockSize 23
 
 #define LED_RGB_KoCalcNumber(index) (index + LED_RGB_KoBlockOffset + _channelIndex * LED_RGB_KoBlockSize)
@@ -2607,36 +3006,2016 @@
 // Leuchtmittelschutz, Maximallast überschritten
 #define KoLED_RGB_ChLampProtOverload                  (knx.getGroupObject(LED_RGB_KoCalcNumber(LED_RGB_KoChLampProtOverload)))
 
-#define SWA_VisibleChannels                     3051      // uint8_t
-#define SWA_HardwareVariant                     3051      // 4 Bits, Bit 6-3
+#define HCL_HclVisibleChannels                  3539      // uint8_t
+#define HCL_HclVacationKoActive                 3540      // 1 Bit, Bit 7
+#define     HCL_HclVacationKoActiveMask 0x80
+#define     HCL_HclVacationKoActiveShift 7
+#define HCL_HclHolidayKoActive                  3540      // 1 Bit, Bit 6
+#define     HCL_HclHolidayKoActiveMask 0x40
+#define     HCL_HclHolidayKoActiveShift 6
+#define HCL_HclDayTypePriority                  3540      // 2 Bits, Bit 5-4
+#define     HCL_HclDayTypePriorityMask 0x30
+#define     HCL_HclDayTypePriorityShift 4
+
+// Aktive HCL-Kanaele
+#define ParamHCL_HclVisibleChannels                  (knx.paramByte(HCL_HclVisibleChannels))
+// Urlaub-KO aktivieren
+#define ParamHCL_HclVacationKoActive                 ((bool)(knx.paramByte(HCL_HclVacationKoActive) & HCL_HclVacationKoActiveMask))
+// Feiertag-KO aktivieren
+#define ParamHCL_HclHolidayKoActive                  ((bool)(knx.paramByte(HCL_HclHolidayKoActive) & HCL_HclHolidayKoActiveMask))
+// Globale Tagtyp-Prioritaet
+#define ParamHCL_HclDayTypePriority                  ((knx.paramByte(HCL_HclDayTypePriority) & HCL_HclDayTypePriorityMask) >> HCL_HclDayTypePriorityShift)
+
+#define HCL_KoHclVacation 1381
+#define HCL_KoHclHoliday 1382
+
+// Urlaub
+#define KoHCL_HclVacation                         (knx.getGroupObject(HCL_KoHclVacation))
+// Feiertag
+#define KoHCL_HclHoliday                          (knx.getGroupObject(HCL_KoHclHoliday))
+
+#define HCL_ChannelCount 6
+
+// Parameter per channel
+#define HCL_ParamBlockOffset 3543
+#define HCL_ParamBlockSize 418
+#define HCL_ParamCalcIndex(index) (index + HCL_ParamBlockOffset + _channelIndex * HCL_ParamBlockSize)
+
+#define HCL_ChActive                             0      // 1 Bit, Bit 7
+#define     HCL_ChActiveMask 0x80
+#define     HCL_ChActiveShift 7
+#define HCL_ChScenesActive                       0      // 1 Bit, Bit 6
+#define     HCL_ChScenesActiveMask 0x40
+#define     HCL_ChScenesActiveShift 6
+#define HCL_ChStartStopKoActive                  0      // 1 Bit, Bit 5
+#define     HCL_ChStartStopKoActiveMask 0x20
+#define     HCL_ChStartStopKoActiveShift 5
+#define HCL_ChExternalCctKoActive                0      // 1 Bit, Bit 4
+#define     HCL_ChExternalCctKoActiveMask 0x10
+#define     HCL_ChExternalCctKoActiveShift 4
+#define HCL_ChExternalCctLockKoActive            0      // 1 Bit, Bit 3
+#define     HCL_ChExternalCctLockKoActiveMask 0x08
+#define     HCL_ChExternalCctLockKoActiveShift 3
+#define HCL_ChHclLockKoActive                    0      // 1 Bit, Bit 2
+#define     HCL_ChHclLockKoActiveMask 0x04
+#define     HCL_ChHclLockKoActiveShift 2
+#define HCL_ChSceneRecallKoActive                0      // 1 Bit, Bit 1
+#define     HCL_ChSceneRecallKoActiveMask 0x02
+#define     HCL_ChSceneRecallKoActiveShift 1
+#define HCL_ChSendTargetBrightness               0      // 1 Bit, Bit 0
+#define     HCL_ChSendTargetBrightnessMask 0x01
+#define     HCL_ChSendTargetBrightnessShift 0
+#define HCL_ChSendTargetCct                      1      // 1 Bit, Bit 7
+#define     HCL_ChSendTargetCctMask 0x80
+#define     HCL_ChSendTargetCctShift 7
+#define HCL_ChSendTargetCombined                 1      // 1 Bit, Bit 6
+#define     HCL_ChSendTargetCombinedMask 0x40
+#define     HCL_ChSendTargetCombinedShift 6
+#define HCL_ChSendStatusRunning                  1      // 1 Bit, Bit 5
+#define     HCL_ChSendStatusRunningMask 0x20
+#define     HCL_ChSendStatusRunningShift 5
+#define HCL_ChSendStatusTable                    1      // 1 Bit, Bit 4
+#define     HCL_ChSendStatusTableMask 0x10
+#define     HCL_ChSendStatusTableShift 4
+#define HCL_ChSendStatusExternal                 1      // 1 Bit, Bit 3
+#define     HCL_ChSendStatusExternalMask 0x08
+#define     HCL_ChSendStatusExternalShift 3
+#define HCL_ChSendStatusLock                     1      // 1 Bit, Bit 2
+#define     HCL_ChSendStatusLockMask 0x04
+#define     HCL_ChSendStatusLockShift 2
+#define HCL_ChSendStatusScene                    1      // 1 Bit, Bit 1
+#define     HCL_ChSendStatusSceneMask 0x02
+#define     HCL_ChSendStatusSceneShift 1
+#define HCL_ChDefaultTableSource                 2      // 1 Bit, Bit 7
+#define     HCL_ChDefaultTableSourceMask 0x80
+#define     HCL_ChDefaultTableSourceShift 7
+#define HCL_ChReferenceMode                      2      // 1 Bit, Bit 6
+#define     HCL_ChReferenceModeMask 0x40
+#define     HCL_ChReferenceModeShift 6
+#define HCL_ChReferenceChannel                   3      // uint8_t
+#define HCL_ChBrightnessScale                    4      // uint8_t
+#define HCL_ChCctScale                           5      // uint8_t
+#define HCL_ChSceneSavePolicy                    6      // 2 Bits, Bit 7-6
+#define     HCL_ChSceneSavePolicyMask 0xC0
+#define     HCL_ChSceneSavePolicyShift 6
+#define HCL_ChExtCctFallbackMode                 7      // 2 Bits, Bit 7-6
+#define     HCL_ChExtCctFallbackModeMask 0xC0
+#define     HCL_ChExtCctFallbackModeShift 6
+#define HCL_ChLockAction                         7      // 2 Bits, Bit 5-4
+#define     HCL_ChLockActionMask 0x30
+#define     HCL_ChLockActionShift 4
+#define HCL_ChLockProgressMode                   7      // 1 Bit, Bit 3
+#define     HCL_ChLockProgressModeMask 0x08
+#define     HCL_ChLockProgressModeShift 3
+#define HCL_ChUnlockBehavior                     7      // 2 Bits, Bit 2-1
+#define     HCL_ChUnlockBehaviorMask 0x06
+#define     HCL_ChUnlockBehaviorShift 1
+#define HCL_ChReturnTimeBase                     8      // 2 Bits, Bit 7-6
+#define     HCL_ChReturnTimeBaseMask 0xC0
+#define     HCL_ChReturnTimeBaseShift 6
+#define HCL_ChReturnTimeTime                     9      // 14 Bits, Bit 15-2
+#define     HCL_ChReturnTimeTimeMask 0xFFFC
+#define     HCL_ChReturnTimeTimeShift 2
+#define HCL_ChWeekdayPointCount                 11      // uint8_t
+#define HCL_ChWeekendPointCount                 12      // uint8_t
+#define HCL_ChControlMode                       13      // 2 Bits, Bit 7-6
+#define     HCL_ChControlModeMask 0xC0
+#define     HCL_ChControlModeShift 6
+#define HCL_ChBrightnessMinChangePercent        14      // uint8_t
+#define HCL_ChBrightnessMinChangeAbsolute       15      // uint8_t
+#define HCL_ChBrightnessCyclicBase              16      // 2 Bits, Bit 7-6
+#define     HCL_ChBrightnessCyclicBaseMask 0xC0
+#define     HCL_ChBrightnessCyclicBaseShift 6
+#define HCL_ChBrightnessCyclicTime              16      // 14 Bits, Bit 13-0
+#define     HCL_ChBrightnessCyclicTimeMask 0x3FFF
+#define     HCL_ChBrightnessCyclicTimeShift 0
+#define HCL_ChCctMinChangePercent               18      // uint8_t
+#define HCL_ChCctMinChangeAbsolute              19      // uint16_t
+#define HCL_ChCctCyclicBase                     21      // 2 Bits, Bit 7-6
+#define     HCL_ChCctCyclicBaseMask 0xC0
+#define     HCL_ChCctCyclicBaseShift 6
+#define HCL_ChCctCyclicTime                     21      // 14 Bits, Bit 13-0
+#define     HCL_ChCctCyclicTimeMask 0x3FFF
+#define     HCL_ChCctCyclicTimeShift 0
+#define HCL_ChCombinedCyclicBase                23      // 2 Bits, Bit 7-6
+#define     HCL_ChCombinedCyclicBaseMask 0xC0
+#define     HCL_ChCombinedCyclicBaseShift 6
+#define HCL_ChCombinedCyclicTime                23      // 14 Bits, Bit 13-0
+#define     HCL_ChCombinedCyclicTimeMask 0x3FFF
+#define     HCL_ChCombinedCyclicTimeShift 0
+#define HCL_ChT1P01UsesOffset                   26      // 1 Bit, Bit 7
+#define     HCL_ChT1P01UsesOffsetMask 0x80
+#define     HCL_ChT1P01UsesOffsetShift 7
+#define HCL_ChT1P01AnchorType                   26      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P01AnchorTypeMask 0x70
+#define     HCL_ChT1P01AnchorTypeShift 4
+#define HCL_ChT1P01BoundaryMode                 26      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P01BoundaryModeMask 0x0C
+#define     HCL_ChT1P01BoundaryModeShift 2
+#define HCL_ChT1P01ExtCctMode                   26      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P01ExtCctModeMask 0x03
+#define     HCL_ChT1P01ExtCctModeShift 0
+#define HCL_ChT1P01ExtCctMix                    27      // uint8_t
+#define HCL_ChT1P01Brightness                   28      // uint8_t
+#define HCL_ChT1P01TimeHour                     29      // uint8_t
+#define HCL_ChT1P01TimeMinute                   30      // uint8_t
+#define HCL_ChT1P01Offset                       31      // int16_t
+#define HCL_ChT1P01BoundaryHour                 33      // uint8_t
+#define HCL_ChT1P01BoundaryMinute               34      // uint8_t
+#define HCL_ChT1P01Cct                          35      // uint16_t
+#define HCL_ChT1P02UsesOffset                   37      // 1 Bit, Bit 7
+#define     HCL_ChT1P02UsesOffsetMask 0x80
+#define     HCL_ChT1P02UsesOffsetShift 7
+#define HCL_ChT1P02AnchorType                   37      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P02AnchorTypeMask 0x70
+#define     HCL_ChT1P02AnchorTypeShift 4
+#define HCL_ChT1P02BoundaryMode                 37      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P02BoundaryModeMask 0x0C
+#define     HCL_ChT1P02BoundaryModeShift 2
+#define HCL_ChT1P02ExtCctMode                   37      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P02ExtCctModeMask 0x03
+#define     HCL_ChT1P02ExtCctModeShift 0
+#define HCL_ChT1P02ExtCctMix                    38      // uint8_t
+#define HCL_ChT1P02Brightness                   39      // uint8_t
+#define HCL_ChT1P02TimeHour                     40      // uint8_t
+#define HCL_ChT1P02TimeMinute                   41      // uint8_t
+#define HCL_ChT1P02Offset                       42      // int16_t
+#define HCL_ChT1P02BoundaryHour                 44      // uint8_t
+#define HCL_ChT1P02BoundaryMinute               45      // uint8_t
+#define HCL_ChT1P02Cct                          46      // uint16_t
+#define HCL_ChT1P03UsesOffset                   48      // 1 Bit, Bit 7
+#define     HCL_ChT1P03UsesOffsetMask 0x80
+#define     HCL_ChT1P03UsesOffsetShift 7
+#define HCL_ChT1P03AnchorType                   48      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P03AnchorTypeMask 0x70
+#define     HCL_ChT1P03AnchorTypeShift 4
+#define HCL_ChT1P03BoundaryMode                 48      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P03BoundaryModeMask 0x0C
+#define     HCL_ChT1P03BoundaryModeShift 2
+#define HCL_ChT1P03ExtCctMode                   48      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P03ExtCctModeMask 0x03
+#define     HCL_ChT1P03ExtCctModeShift 0
+#define HCL_ChT1P03ExtCctMix                    49      // uint8_t
+#define HCL_ChT1P03Brightness                   50      // uint8_t
+#define HCL_ChT1P03TimeHour                     51      // uint8_t
+#define HCL_ChT1P03TimeMinute                   52      // uint8_t
+#define HCL_ChT1P03Offset                       53      // int16_t
+#define HCL_ChT1P03BoundaryHour                 55      // uint8_t
+#define HCL_ChT1P03BoundaryMinute               56      // uint8_t
+#define HCL_ChT1P03Cct                          57      // uint16_t
+#define HCL_ChT1P04UsesOffset                   59      // 1 Bit, Bit 7
+#define     HCL_ChT1P04UsesOffsetMask 0x80
+#define     HCL_ChT1P04UsesOffsetShift 7
+#define HCL_ChT1P04AnchorType                   59      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P04AnchorTypeMask 0x70
+#define     HCL_ChT1P04AnchorTypeShift 4
+#define HCL_ChT1P04BoundaryMode                 59      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P04BoundaryModeMask 0x0C
+#define     HCL_ChT1P04BoundaryModeShift 2
+#define HCL_ChT1P04ExtCctMode                   59      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P04ExtCctModeMask 0x03
+#define     HCL_ChT1P04ExtCctModeShift 0
+#define HCL_ChT1P04ExtCctMix                    60      // uint8_t
+#define HCL_ChT1P04Brightness                   61      // uint8_t
+#define HCL_ChT1P04TimeHour                     62      // uint8_t
+#define HCL_ChT1P04TimeMinute                   63      // uint8_t
+#define HCL_ChT1P04Offset                       64      // int16_t
+#define HCL_ChT1P04BoundaryHour                 66      // uint8_t
+#define HCL_ChT1P04BoundaryMinute               67      // uint8_t
+#define HCL_ChT1P04Cct                          68      // uint16_t
+#define HCL_ChT1P05UsesOffset                   70      // 1 Bit, Bit 7
+#define     HCL_ChT1P05UsesOffsetMask 0x80
+#define     HCL_ChT1P05UsesOffsetShift 7
+#define HCL_ChT1P05AnchorType                   70      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P05AnchorTypeMask 0x70
+#define     HCL_ChT1P05AnchorTypeShift 4
+#define HCL_ChT1P05BoundaryMode                 70      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P05BoundaryModeMask 0x0C
+#define     HCL_ChT1P05BoundaryModeShift 2
+#define HCL_ChT1P05ExtCctMode                   70      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P05ExtCctModeMask 0x03
+#define     HCL_ChT1P05ExtCctModeShift 0
+#define HCL_ChT1P05ExtCctMix                    71      // uint8_t
+#define HCL_ChT1P05Brightness                   72      // uint8_t
+#define HCL_ChT1P05TimeHour                     73      // uint8_t
+#define HCL_ChT1P05TimeMinute                   74      // uint8_t
+#define HCL_ChT1P05Offset                       75      // int16_t
+#define HCL_ChT1P05BoundaryHour                 77      // uint8_t
+#define HCL_ChT1P05BoundaryMinute               78      // uint8_t
+#define HCL_ChT1P05Cct                          79      // uint16_t
+#define HCL_ChT1P06UsesOffset                   81      // 1 Bit, Bit 7
+#define     HCL_ChT1P06UsesOffsetMask 0x80
+#define     HCL_ChT1P06UsesOffsetShift 7
+#define HCL_ChT1P06AnchorType                   81      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P06AnchorTypeMask 0x70
+#define     HCL_ChT1P06AnchorTypeShift 4
+#define HCL_ChT1P06BoundaryMode                 81      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P06BoundaryModeMask 0x0C
+#define     HCL_ChT1P06BoundaryModeShift 2
+#define HCL_ChT1P06ExtCctMode                   81      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P06ExtCctModeMask 0x03
+#define     HCL_ChT1P06ExtCctModeShift 0
+#define HCL_ChT1P06ExtCctMix                    82      // uint8_t
+#define HCL_ChT1P06Brightness                   83      // uint8_t
+#define HCL_ChT1P06TimeHour                     84      // uint8_t
+#define HCL_ChT1P06TimeMinute                   85      // uint8_t
+#define HCL_ChT1P06Offset                       86      // int16_t
+#define HCL_ChT1P06BoundaryHour                 88      // uint8_t
+#define HCL_ChT1P06BoundaryMinute               89      // uint8_t
+#define HCL_ChT1P06Cct                          90      // uint16_t
+#define HCL_ChT1P07UsesOffset                   92      // 1 Bit, Bit 7
+#define     HCL_ChT1P07UsesOffsetMask 0x80
+#define     HCL_ChT1P07UsesOffsetShift 7
+#define HCL_ChT1P07AnchorType                   92      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P07AnchorTypeMask 0x70
+#define     HCL_ChT1P07AnchorTypeShift 4
+#define HCL_ChT1P07BoundaryMode                 92      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P07BoundaryModeMask 0x0C
+#define     HCL_ChT1P07BoundaryModeShift 2
+#define HCL_ChT1P07ExtCctMode                   92      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P07ExtCctModeMask 0x03
+#define     HCL_ChT1P07ExtCctModeShift 0
+#define HCL_ChT1P07ExtCctMix                    93      // uint8_t
+#define HCL_ChT1P07Brightness                   94      // uint8_t
+#define HCL_ChT1P07TimeHour                     95      // uint8_t
+#define HCL_ChT1P07TimeMinute                   96      // uint8_t
+#define HCL_ChT1P07Offset                       97      // int16_t
+#define HCL_ChT1P07BoundaryHour                 99      // uint8_t
+#define HCL_ChT1P07BoundaryMinute               100      // uint8_t
+#define HCL_ChT1P07Cct                          101      // uint16_t
+#define HCL_ChT1P08UsesOffset                   103      // 1 Bit, Bit 7
+#define     HCL_ChT1P08UsesOffsetMask 0x80
+#define     HCL_ChT1P08UsesOffsetShift 7
+#define HCL_ChT1P08AnchorType                   103      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P08AnchorTypeMask 0x70
+#define     HCL_ChT1P08AnchorTypeShift 4
+#define HCL_ChT1P08BoundaryMode                 103      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P08BoundaryModeMask 0x0C
+#define     HCL_ChT1P08BoundaryModeShift 2
+#define HCL_ChT1P08ExtCctMode                   103      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P08ExtCctModeMask 0x03
+#define     HCL_ChT1P08ExtCctModeShift 0
+#define HCL_ChT1P08ExtCctMix                    104      // uint8_t
+#define HCL_ChT1P08Brightness                   105      // uint8_t
+#define HCL_ChT1P08TimeHour                     106      // uint8_t
+#define HCL_ChT1P08TimeMinute                   107      // uint8_t
+#define HCL_ChT1P08Offset                       108      // int16_t
+#define HCL_ChT1P08BoundaryHour                 110      // uint8_t
+#define HCL_ChT1P08BoundaryMinute               111      // uint8_t
+#define HCL_ChT1P08Cct                          112      // uint16_t
+#define HCL_ChT1P09UsesOffset                   114      // 1 Bit, Bit 7
+#define     HCL_ChT1P09UsesOffsetMask 0x80
+#define     HCL_ChT1P09UsesOffsetShift 7
+#define HCL_ChT1P09AnchorType                   114      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P09AnchorTypeMask 0x70
+#define     HCL_ChT1P09AnchorTypeShift 4
+#define HCL_ChT1P09BoundaryMode                 114      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P09BoundaryModeMask 0x0C
+#define     HCL_ChT1P09BoundaryModeShift 2
+#define HCL_ChT1P09ExtCctMode                   114      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P09ExtCctModeMask 0x03
+#define     HCL_ChT1P09ExtCctModeShift 0
+#define HCL_ChT1P09ExtCctMix                    115      // uint8_t
+#define HCL_ChT1P09Brightness                   116      // uint8_t
+#define HCL_ChT1P09TimeHour                     117      // uint8_t
+#define HCL_ChT1P09TimeMinute                   118      // uint8_t
+#define HCL_ChT1P09Offset                       119      // int16_t
+#define HCL_ChT1P09BoundaryHour                 121      // uint8_t
+#define HCL_ChT1P09BoundaryMinute               122      // uint8_t
+#define HCL_ChT1P09Cct                          123      // uint16_t
+#define HCL_ChT1P10UsesOffset                   125      // 1 Bit, Bit 7
+#define     HCL_ChT1P10UsesOffsetMask 0x80
+#define     HCL_ChT1P10UsesOffsetShift 7
+#define HCL_ChT1P10AnchorType                   125      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P10AnchorTypeMask 0x70
+#define     HCL_ChT1P10AnchorTypeShift 4
+#define HCL_ChT1P10BoundaryMode                 125      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P10BoundaryModeMask 0x0C
+#define     HCL_ChT1P10BoundaryModeShift 2
+#define HCL_ChT1P10ExtCctMode                   125      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P10ExtCctModeMask 0x03
+#define     HCL_ChT1P10ExtCctModeShift 0
+#define HCL_ChT1P10ExtCctMix                    126      // uint8_t
+#define HCL_ChT1P10Brightness                   127      // uint8_t
+#define HCL_ChT1P10TimeHour                     128      // uint8_t
+#define HCL_ChT1P10TimeMinute                   129      // uint8_t
+#define HCL_ChT1P10Offset                       130      // int16_t
+#define HCL_ChT1P10BoundaryHour                 132      // uint8_t
+#define HCL_ChT1P10BoundaryMinute               133      // uint8_t
+#define HCL_ChT1P10Cct                          134      // uint16_t
+#define HCL_ChT1P11UsesOffset                   136      // 1 Bit, Bit 7
+#define     HCL_ChT1P11UsesOffsetMask 0x80
+#define     HCL_ChT1P11UsesOffsetShift 7
+#define HCL_ChT1P11AnchorType                   136      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P11AnchorTypeMask 0x70
+#define     HCL_ChT1P11AnchorTypeShift 4
+#define HCL_ChT1P11BoundaryMode                 136      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P11BoundaryModeMask 0x0C
+#define     HCL_ChT1P11BoundaryModeShift 2
+#define HCL_ChT1P11ExtCctMode                   136      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P11ExtCctModeMask 0x03
+#define     HCL_ChT1P11ExtCctModeShift 0
+#define HCL_ChT1P11ExtCctMix                    137      // uint8_t
+#define HCL_ChT1P11Brightness                   138      // uint8_t
+#define HCL_ChT1P11TimeHour                     139      // uint8_t
+#define HCL_ChT1P11TimeMinute                   140      // uint8_t
+#define HCL_ChT1P11Offset                       141      // int16_t
+#define HCL_ChT1P11BoundaryHour                 143      // uint8_t
+#define HCL_ChT1P11BoundaryMinute               144      // uint8_t
+#define HCL_ChT1P11Cct                          145      // uint16_t
+#define HCL_ChT1P12UsesOffset                   147      // 1 Bit, Bit 7
+#define     HCL_ChT1P12UsesOffsetMask 0x80
+#define     HCL_ChT1P12UsesOffsetShift 7
+#define HCL_ChT1P12AnchorType                   147      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P12AnchorTypeMask 0x70
+#define     HCL_ChT1P12AnchorTypeShift 4
+#define HCL_ChT1P12BoundaryMode                 147      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P12BoundaryModeMask 0x0C
+#define     HCL_ChT1P12BoundaryModeShift 2
+#define HCL_ChT1P12ExtCctMode                   147      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P12ExtCctModeMask 0x03
+#define     HCL_ChT1P12ExtCctModeShift 0
+#define HCL_ChT1P12ExtCctMix                    148      // uint8_t
+#define HCL_ChT1P12Brightness                   149      // uint8_t
+#define HCL_ChT1P12TimeHour                     150      // uint8_t
+#define HCL_ChT1P12TimeMinute                   151      // uint8_t
+#define HCL_ChT1P12Offset                       152      // int16_t
+#define HCL_ChT1P12BoundaryHour                 154      // uint8_t
+#define HCL_ChT1P12BoundaryMinute               155      // uint8_t
+#define HCL_ChT1P12Cct                          156      // uint16_t
+#define HCL_ChT1P13UsesOffset                   158      // 1 Bit, Bit 7
+#define     HCL_ChT1P13UsesOffsetMask 0x80
+#define     HCL_ChT1P13UsesOffsetShift 7
+#define HCL_ChT1P13AnchorType                   158      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P13AnchorTypeMask 0x70
+#define     HCL_ChT1P13AnchorTypeShift 4
+#define HCL_ChT1P13BoundaryMode                 158      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P13BoundaryModeMask 0x0C
+#define     HCL_ChT1P13BoundaryModeShift 2
+#define HCL_ChT1P13ExtCctMode                   158      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P13ExtCctModeMask 0x03
+#define     HCL_ChT1P13ExtCctModeShift 0
+#define HCL_ChT1P13ExtCctMix                    159      // uint8_t
+#define HCL_ChT1P13Brightness                   160      // uint8_t
+#define HCL_ChT1P13TimeHour                     161      // uint8_t
+#define HCL_ChT1P13TimeMinute                   162      // uint8_t
+#define HCL_ChT1P13Offset                       163      // int16_t
+#define HCL_ChT1P13BoundaryHour                 165      // uint8_t
+#define HCL_ChT1P13BoundaryMinute               166      // uint8_t
+#define HCL_ChT1P13Cct                          167      // uint16_t
+#define HCL_ChT1P14UsesOffset                   169      // 1 Bit, Bit 7
+#define     HCL_ChT1P14UsesOffsetMask 0x80
+#define     HCL_ChT1P14UsesOffsetShift 7
+#define HCL_ChT1P14AnchorType                   169      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P14AnchorTypeMask 0x70
+#define     HCL_ChT1P14AnchorTypeShift 4
+#define HCL_ChT1P14BoundaryMode                 169      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P14BoundaryModeMask 0x0C
+#define     HCL_ChT1P14BoundaryModeShift 2
+#define HCL_ChT1P14ExtCctMode                   169      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P14ExtCctModeMask 0x03
+#define     HCL_ChT1P14ExtCctModeShift 0
+#define HCL_ChT1P14ExtCctMix                    170      // uint8_t
+#define HCL_ChT1P14Brightness                   171      // uint8_t
+#define HCL_ChT1P14TimeHour                     172      // uint8_t
+#define HCL_ChT1P14TimeMinute                   173      // uint8_t
+#define HCL_ChT1P14Offset                       174      // int16_t
+#define HCL_ChT1P14BoundaryHour                 176      // uint8_t
+#define HCL_ChT1P14BoundaryMinute               177      // uint8_t
+#define HCL_ChT1P14Cct                          178      // uint16_t
+#define HCL_ChT1P15UsesOffset                   180      // 1 Bit, Bit 7
+#define     HCL_ChT1P15UsesOffsetMask 0x80
+#define     HCL_ChT1P15UsesOffsetShift 7
+#define HCL_ChT1P15AnchorType                   180      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P15AnchorTypeMask 0x70
+#define     HCL_ChT1P15AnchorTypeShift 4
+#define HCL_ChT1P15BoundaryMode                 180      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P15BoundaryModeMask 0x0C
+#define     HCL_ChT1P15BoundaryModeShift 2
+#define HCL_ChT1P15ExtCctMode                   180      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P15ExtCctModeMask 0x03
+#define     HCL_ChT1P15ExtCctModeShift 0
+#define HCL_ChT1P15ExtCctMix                    181      // uint8_t
+#define HCL_ChT1P15Brightness                   182      // uint8_t
+#define HCL_ChT1P15TimeHour                     183      // uint8_t
+#define HCL_ChT1P15TimeMinute                   184      // uint8_t
+#define HCL_ChT1P15Offset                       185      // int16_t
+#define HCL_ChT1P15BoundaryHour                 187      // uint8_t
+#define HCL_ChT1P15BoundaryMinute               188      // uint8_t
+#define HCL_ChT1P15Cct                          189      // uint16_t
+#define HCL_ChT1P16UsesOffset                   191      // 1 Bit, Bit 7
+#define     HCL_ChT1P16UsesOffsetMask 0x80
+#define     HCL_ChT1P16UsesOffsetShift 7
+#define HCL_ChT1P16AnchorType                   191      // 3 Bits, Bit 6-4
+#define     HCL_ChT1P16AnchorTypeMask 0x70
+#define     HCL_ChT1P16AnchorTypeShift 4
+#define HCL_ChT1P16BoundaryMode                 191      // 2 Bits, Bit 3-2
+#define     HCL_ChT1P16BoundaryModeMask 0x0C
+#define     HCL_ChT1P16BoundaryModeShift 2
+#define HCL_ChT1P16ExtCctMode                   191      // 2 Bits, Bit 1-0
+#define     HCL_ChT1P16ExtCctModeMask 0x03
+#define     HCL_ChT1P16ExtCctModeShift 0
+#define HCL_ChT1P16ExtCctMix                    192      // uint8_t
+#define HCL_ChT1P16Brightness                   193      // uint8_t
+#define HCL_ChT1P16TimeHour                     194      // uint8_t
+#define HCL_ChT1P16TimeMinute                   195      // uint8_t
+#define HCL_ChT1P16Offset                       196      // int16_t
+#define HCL_ChT1P16BoundaryHour                 198      // uint8_t
+#define HCL_ChT1P16BoundaryMinute               199      // uint8_t
+#define HCL_ChT1P16Cct                          200      // uint16_t
+#define HCL_ChT2P01UsesOffset                   202      // 1 Bit, Bit 7
+#define     HCL_ChT2P01UsesOffsetMask 0x80
+#define     HCL_ChT2P01UsesOffsetShift 7
+#define HCL_ChT2P01AnchorType                   202      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P01AnchorTypeMask 0x70
+#define     HCL_ChT2P01AnchorTypeShift 4
+#define HCL_ChT2P01BoundaryMode                 202      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P01BoundaryModeMask 0x0C
+#define     HCL_ChT2P01BoundaryModeShift 2
+#define HCL_ChT2P01ExtCctMode                   202      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P01ExtCctModeMask 0x03
+#define     HCL_ChT2P01ExtCctModeShift 0
+#define HCL_ChT2P01ExtCctMix                    203      // uint8_t
+#define HCL_ChT2P01Brightness                   204      // uint8_t
+#define HCL_ChT2P01TimeHour                     205      // uint8_t
+#define HCL_ChT2P01TimeMinute                   206      // uint8_t
+#define HCL_ChT2P01Offset                       207      // int16_t
+#define HCL_ChT2P01BoundaryHour                 209      // uint8_t
+#define HCL_ChT2P01BoundaryMinute               210      // uint8_t
+#define HCL_ChT2P01Cct                          211      // uint16_t
+#define HCL_ChT2P02UsesOffset                   213      // 1 Bit, Bit 7
+#define     HCL_ChT2P02UsesOffsetMask 0x80
+#define     HCL_ChT2P02UsesOffsetShift 7
+#define HCL_ChT2P02AnchorType                   213      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P02AnchorTypeMask 0x70
+#define     HCL_ChT2P02AnchorTypeShift 4
+#define HCL_ChT2P02BoundaryMode                 213      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P02BoundaryModeMask 0x0C
+#define     HCL_ChT2P02BoundaryModeShift 2
+#define HCL_ChT2P02ExtCctMode                   213      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P02ExtCctModeMask 0x03
+#define     HCL_ChT2P02ExtCctModeShift 0
+#define HCL_ChT2P02ExtCctMix                    214      // uint8_t
+#define HCL_ChT2P02Brightness                   215      // uint8_t
+#define HCL_ChT2P02TimeHour                     216      // uint8_t
+#define HCL_ChT2P02TimeMinute                   217      // uint8_t
+#define HCL_ChT2P02Offset                       218      // int16_t
+#define HCL_ChT2P02BoundaryHour                 220      // uint8_t
+#define HCL_ChT2P02BoundaryMinute               221      // uint8_t
+#define HCL_ChT2P02Cct                          222      // uint16_t
+#define HCL_ChT2P03UsesOffset                   224      // 1 Bit, Bit 7
+#define     HCL_ChT2P03UsesOffsetMask 0x80
+#define     HCL_ChT2P03UsesOffsetShift 7
+#define HCL_ChT2P03AnchorType                   224      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P03AnchorTypeMask 0x70
+#define     HCL_ChT2P03AnchorTypeShift 4
+#define HCL_ChT2P03BoundaryMode                 224      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P03BoundaryModeMask 0x0C
+#define     HCL_ChT2P03BoundaryModeShift 2
+#define HCL_ChT2P03ExtCctMode                   224      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P03ExtCctModeMask 0x03
+#define     HCL_ChT2P03ExtCctModeShift 0
+#define HCL_ChT2P03ExtCctMix                    225      // uint8_t
+#define HCL_ChT2P03Brightness                   226      // uint8_t
+#define HCL_ChT2P03TimeHour                     227      // uint8_t
+#define HCL_ChT2P03TimeMinute                   228      // uint8_t
+#define HCL_ChT2P03Offset                       229      // int16_t
+#define HCL_ChT2P03BoundaryHour                 231      // uint8_t
+#define HCL_ChT2P03BoundaryMinute               232      // uint8_t
+#define HCL_ChT2P03Cct                          233      // uint16_t
+#define HCL_ChT2P04UsesOffset                   235      // 1 Bit, Bit 7
+#define     HCL_ChT2P04UsesOffsetMask 0x80
+#define     HCL_ChT2P04UsesOffsetShift 7
+#define HCL_ChT2P04AnchorType                   235      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P04AnchorTypeMask 0x70
+#define     HCL_ChT2P04AnchorTypeShift 4
+#define HCL_ChT2P04BoundaryMode                 235      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P04BoundaryModeMask 0x0C
+#define     HCL_ChT2P04BoundaryModeShift 2
+#define HCL_ChT2P04ExtCctMode                   235      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P04ExtCctModeMask 0x03
+#define     HCL_ChT2P04ExtCctModeShift 0
+#define HCL_ChT2P04ExtCctMix                    236      // uint8_t
+#define HCL_ChT2P04Brightness                   237      // uint8_t
+#define HCL_ChT2P04TimeHour                     238      // uint8_t
+#define HCL_ChT2P04TimeMinute                   239      // uint8_t
+#define HCL_ChT2P04Offset                       240      // int16_t
+#define HCL_ChT2P04BoundaryHour                 242      // uint8_t
+#define HCL_ChT2P04BoundaryMinute               243      // uint8_t
+#define HCL_ChT2P04Cct                          244      // uint16_t
+#define HCL_ChT2P05UsesOffset                   246      // 1 Bit, Bit 7
+#define     HCL_ChT2P05UsesOffsetMask 0x80
+#define     HCL_ChT2P05UsesOffsetShift 7
+#define HCL_ChT2P05AnchorType                   246      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P05AnchorTypeMask 0x70
+#define     HCL_ChT2P05AnchorTypeShift 4
+#define HCL_ChT2P05BoundaryMode                 246      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P05BoundaryModeMask 0x0C
+#define     HCL_ChT2P05BoundaryModeShift 2
+#define HCL_ChT2P05ExtCctMode                   246      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P05ExtCctModeMask 0x03
+#define     HCL_ChT2P05ExtCctModeShift 0
+#define HCL_ChT2P05ExtCctMix                    247      // uint8_t
+#define HCL_ChT2P05Brightness                   248      // uint8_t
+#define HCL_ChT2P05TimeHour                     249      // uint8_t
+#define HCL_ChT2P05TimeMinute                   250      // uint8_t
+#define HCL_ChT2P05Offset                       251      // int16_t
+#define HCL_ChT2P05BoundaryHour                 253      // uint8_t
+#define HCL_ChT2P05BoundaryMinute               254      // uint8_t
+#define HCL_ChT2P05Cct                          255      // uint16_t
+#define HCL_ChT2P06UsesOffset                   257      // 1 Bit, Bit 7
+#define     HCL_ChT2P06UsesOffsetMask 0x80
+#define     HCL_ChT2P06UsesOffsetShift 7
+#define HCL_ChT2P06AnchorType                   257      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P06AnchorTypeMask 0x70
+#define     HCL_ChT2P06AnchorTypeShift 4
+#define HCL_ChT2P06BoundaryMode                 257      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P06BoundaryModeMask 0x0C
+#define     HCL_ChT2P06BoundaryModeShift 2
+#define HCL_ChT2P06ExtCctMode                   257      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P06ExtCctModeMask 0x03
+#define     HCL_ChT2P06ExtCctModeShift 0
+#define HCL_ChT2P06ExtCctMix                    258      // uint8_t
+#define HCL_ChT2P06Brightness                   259      // uint8_t
+#define HCL_ChT2P06TimeHour                     260      // uint8_t
+#define HCL_ChT2P06TimeMinute                   261      // uint8_t
+#define HCL_ChT2P06Offset                       262      // int16_t
+#define HCL_ChT2P06BoundaryHour                 264      // uint8_t
+#define HCL_ChT2P06BoundaryMinute               265      // uint8_t
+#define HCL_ChT2P06Cct                          266      // uint16_t
+#define HCL_ChT2P07UsesOffset                   268      // 1 Bit, Bit 7
+#define     HCL_ChT2P07UsesOffsetMask 0x80
+#define     HCL_ChT2P07UsesOffsetShift 7
+#define HCL_ChT2P07AnchorType                   268      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P07AnchorTypeMask 0x70
+#define     HCL_ChT2P07AnchorTypeShift 4
+#define HCL_ChT2P07BoundaryMode                 268      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P07BoundaryModeMask 0x0C
+#define     HCL_ChT2P07BoundaryModeShift 2
+#define HCL_ChT2P07ExtCctMode                   268      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P07ExtCctModeMask 0x03
+#define     HCL_ChT2P07ExtCctModeShift 0
+#define HCL_ChT2P07ExtCctMix                    269      // uint8_t
+#define HCL_ChT2P07Brightness                   270      // uint8_t
+#define HCL_ChT2P07TimeHour                     271      // uint8_t
+#define HCL_ChT2P07TimeMinute                   272      // uint8_t
+#define HCL_ChT2P07Offset                       273      // int16_t
+#define HCL_ChT2P07BoundaryHour                 275      // uint8_t
+#define HCL_ChT2P07BoundaryMinute               276      // uint8_t
+#define HCL_ChT2P07Cct                          277      // uint16_t
+#define HCL_ChT2P08UsesOffset                   279      // 1 Bit, Bit 7
+#define     HCL_ChT2P08UsesOffsetMask 0x80
+#define     HCL_ChT2P08UsesOffsetShift 7
+#define HCL_ChT2P08AnchorType                   279      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P08AnchorTypeMask 0x70
+#define     HCL_ChT2P08AnchorTypeShift 4
+#define HCL_ChT2P08BoundaryMode                 279      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P08BoundaryModeMask 0x0C
+#define     HCL_ChT2P08BoundaryModeShift 2
+#define HCL_ChT2P08ExtCctMode                   279      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P08ExtCctModeMask 0x03
+#define     HCL_ChT2P08ExtCctModeShift 0
+#define HCL_ChT2P08ExtCctMix                    280      // uint8_t
+#define HCL_ChT2P08Brightness                   281      // uint8_t
+#define HCL_ChT2P08TimeHour                     282      // uint8_t
+#define HCL_ChT2P08TimeMinute                   283      // uint8_t
+#define HCL_ChT2P08Offset                       284      // int16_t
+#define HCL_ChT2P08BoundaryHour                 286      // uint8_t
+#define HCL_ChT2P08BoundaryMinute               287      // uint8_t
+#define HCL_ChT2P08Cct                          288      // uint16_t
+#define HCL_ChT2P09UsesOffset                   290      // 1 Bit, Bit 7
+#define     HCL_ChT2P09UsesOffsetMask 0x80
+#define     HCL_ChT2P09UsesOffsetShift 7
+#define HCL_ChT2P09AnchorType                   290      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P09AnchorTypeMask 0x70
+#define     HCL_ChT2P09AnchorTypeShift 4
+#define HCL_ChT2P09BoundaryMode                 290      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P09BoundaryModeMask 0x0C
+#define     HCL_ChT2P09BoundaryModeShift 2
+#define HCL_ChT2P09ExtCctMode                   290      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P09ExtCctModeMask 0x03
+#define     HCL_ChT2P09ExtCctModeShift 0
+#define HCL_ChT2P09ExtCctMix                    291      // uint8_t
+#define HCL_ChT2P09Brightness                   292      // uint8_t
+#define HCL_ChT2P09TimeHour                     293      // uint8_t
+#define HCL_ChT2P09TimeMinute                   294      // uint8_t
+#define HCL_ChT2P09Offset                       295      // int16_t
+#define HCL_ChT2P09BoundaryHour                 297      // uint8_t
+#define HCL_ChT2P09BoundaryMinute               298      // uint8_t
+#define HCL_ChT2P09Cct                          299      // uint16_t
+#define HCL_ChT2P10UsesOffset                   301      // 1 Bit, Bit 7
+#define     HCL_ChT2P10UsesOffsetMask 0x80
+#define     HCL_ChT2P10UsesOffsetShift 7
+#define HCL_ChT2P10AnchorType                   301      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P10AnchorTypeMask 0x70
+#define     HCL_ChT2P10AnchorTypeShift 4
+#define HCL_ChT2P10BoundaryMode                 301      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P10BoundaryModeMask 0x0C
+#define     HCL_ChT2P10BoundaryModeShift 2
+#define HCL_ChT2P10ExtCctMode                   301      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P10ExtCctModeMask 0x03
+#define     HCL_ChT2P10ExtCctModeShift 0
+#define HCL_ChT2P10ExtCctMix                    302      // uint8_t
+#define HCL_ChT2P10Brightness                   303      // uint8_t
+#define HCL_ChT2P10TimeHour                     304      // uint8_t
+#define HCL_ChT2P10TimeMinute                   305      // uint8_t
+#define HCL_ChT2P10Offset                       306      // int16_t
+#define HCL_ChT2P10BoundaryHour                 308      // uint8_t
+#define HCL_ChT2P10BoundaryMinute               309      // uint8_t
+#define HCL_ChT2P10Cct                          310      // uint16_t
+#define HCL_ChT2P11UsesOffset                   312      // 1 Bit, Bit 7
+#define     HCL_ChT2P11UsesOffsetMask 0x80
+#define     HCL_ChT2P11UsesOffsetShift 7
+#define HCL_ChT2P11AnchorType                   312      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P11AnchorTypeMask 0x70
+#define     HCL_ChT2P11AnchorTypeShift 4
+#define HCL_ChT2P11BoundaryMode                 312      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P11BoundaryModeMask 0x0C
+#define     HCL_ChT2P11BoundaryModeShift 2
+#define HCL_ChT2P11ExtCctMode                   312      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P11ExtCctModeMask 0x03
+#define     HCL_ChT2P11ExtCctModeShift 0
+#define HCL_ChT2P11ExtCctMix                    313      // uint8_t
+#define HCL_ChT2P11Brightness                   314      // uint8_t
+#define HCL_ChT2P11TimeHour                     315      // uint8_t
+#define HCL_ChT2P11TimeMinute                   316      // uint8_t
+#define HCL_ChT2P11Offset                       317      // int16_t
+#define HCL_ChT2P11BoundaryHour                 319      // uint8_t
+#define HCL_ChT2P11BoundaryMinute               320      // uint8_t
+#define HCL_ChT2P11Cct                          321      // uint16_t
+#define HCL_ChT2P12UsesOffset                   323      // 1 Bit, Bit 7
+#define     HCL_ChT2P12UsesOffsetMask 0x80
+#define     HCL_ChT2P12UsesOffsetShift 7
+#define HCL_ChT2P12AnchorType                   323      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P12AnchorTypeMask 0x70
+#define     HCL_ChT2P12AnchorTypeShift 4
+#define HCL_ChT2P12BoundaryMode                 323      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P12BoundaryModeMask 0x0C
+#define     HCL_ChT2P12BoundaryModeShift 2
+#define HCL_ChT2P12ExtCctMode                   323      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P12ExtCctModeMask 0x03
+#define     HCL_ChT2P12ExtCctModeShift 0
+#define HCL_ChT2P12ExtCctMix                    324      // uint8_t
+#define HCL_ChT2P12Brightness                   325      // uint8_t
+#define HCL_ChT2P12TimeHour                     326      // uint8_t
+#define HCL_ChT2P12TimeMinute                   327      // uint8_t
+#define HCL_ChT2P12Offset                       328      // int16_t
+#define HCL_ChT2P12BoundaryHour                 330      // uint8_t
+#define HCL_ChT2P12BoundaryMinute               331      // uint8_t
+#define HCL_ChT2P12Cct                          332      // uint16_t
+#define HCL_ChT2P13UsesOffset                   334      // 1 Bit, Bit 7
+#define     HCL_ChT2P13UsesOffsetMask 0x80
+#define     HCL_ChT2P13UsesOffsetShift 7
+#define HCL_ChT2P13AnchorType                   334      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P13AnchorTypeMask 0x70
+#define     HCL_ChT2P13AnchorTypeShift 4
+#define HCL_ChT2P13BoundaryMode                 334      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P13BoundaryModeMask 0x0C
+#define     HCL_ChT2P13BoundaryModeShift 2
+#define HCL_ChT2P13ExtCctMode                   334      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P13ExtCctModeMask 0x03
+#define     HCL_ChT2P13ExtCctModeShift 0
+#define HCL_ChT2P13ExtCctMix                    335      // uint8_t
+#define HCL_ChT2P13Brightness                   336      // uint8_t
+#define HCL_ChT2P13TimeHour                     337      // uint8_t
+#define HCL_ChT2P13TimeMinute                   338      // uint8_t
+#define HCL_ChT2P13Offset                       339      // int16_t
+#define HCL_ChT2P13BoundaryHour                 341      // uint8_t
+#define HCL_ChT2P13BoundaryMinute               342      // uint8_t
+#define HCL_ChT2P13Cct                          343      // uint16_t
+#define HCL_ChT2P14UsesOffset                   345      // 1 Bit, Bit 7
+#define     HCL_ChT2P14UsesOffsetMask 0x80
+#define     HCL_ChT2P14UsesOffsetShift 7
+#define HCL_ChT2P14AnchorType                   345      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P14AnchorTypeMask 0x70
+#define     HCL_ChT2P14AnchorTypeShift 4
+#define HCL_ChT2P14BoundaryMode                 345      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P14BoundaryModeMask 0x0C
+#define     HCL_ChT2P14BoundaryModeShift 2
+#define HCL_ChT2P14ExtCctMode                   345      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P14ExtCctModeMask 0x03
+#define     HCL_ChT2P14ExtCctModeShift 0
+#define HCL_ChT2P14ExtCctMix                    346      // uint8_t
+#define HCL_ChT2P14Brightness                   347      // uint8_t
+#define HCL_ChT2P14TimeHour                     348      // uint8_t
+#define HCL_ChT2P14TimeMinute                   349      // uint8_t
+#define HCL_ChT2P14Offset                       350      // int16_t
+#define HCL_ChT2P14BoundaryHour                 352      // uint8_t
+#define HCL_ChT2P14BoundaryMinute               353      // uint8_t
+#define HCL_ChT2P14Cct                          354      // uint16_t
+#define HCL_ChT2P15UsesOffset                   356      // 1 Bit, Bit 7
+#define     HCL_ChT2P15UsesOffsetMask 0x80
+#define     HCL_ChT2P15UsesOffsetShift 7
+#define HCL_ChT2P15AnchorType                   356      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P15AnchorTypeMask 0x70
+#define     HCL_ChT2P15AnchorTypeShift 4
+#define HCL_ChT2P15BoundaryMode                 356      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P15BoundaryModeMask 0x0C
+#define     HCL_ChT2P15BoundaryModeShift 2
+#define HCL_ChT2P15ExtCctMode                   356      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P15ExtCctModeMask 0x03
+#define     HCL_ChT2P15ExtCctModeShift 0
+#define HCL_ChT2P15ExtCctMix                    357      // uint8_t
+#define HCL_ChT2P15Brightness                   358      // uint8_t
+#define HCL_ChT2P15TimeHour                     359      // uint8_t
+#define HCL_ChT2P15TimeMinute                   360      // uint8_t
+#define HCL_ChT2P15Offset                       361      // int16_t
+#define HCL_ChT2P15BoundaryHour                 363      // uint8_t
+#define HCL_ChT2P15BoundaryMinute               364      // uint8_t
+#define HCL_ChT2P15Cct                          365      // uint16_t
+#define HCL_ChT2P16UsesOffset                   367      // 1 Bit, Bit 7
+#define     HCL_ChT2P16UsesOffsetMask 0x80
+#define     HCL_ChT2P16UsesOffsetShift 7
+#define HCL_ChT2P16AnchorType                   367      // 3 Bits, Bit 6-4
+#define     HCL_ChT2P16AnchorTypeMask 0x70
+#define     HCL_ChT2P16AnchorTypeShift 4
+#define HCL_ChT2P16BoundaryMode                 367      // 2 Bits, Bit 3-2
+#define     HCL_ChT2P16BoundaryModeMask 0x0C
+#define     HCL_ChT2P16BoundaryModeShift 2
+#define HCL_ChT2P16ExtCctMode                   367      // 2 Bits, Bit 1-0
+#define     HCL_ChT2P16ExtCctModeMask 0x03
+#define     HCL_ChT2P16ExtCctModeShift 0
+#define HCL_ChT2P16ExtCctMix                    368      // uint8_t
+#define HCL_ChT2P16Brightness                   369      // uint8_t
+#define HCL_ChT2P16TimeHour                     370      // uint8_t
+#define HCL_ChT2P16TimeMinute                   371      // uint8_t
+#define HCL_ChT2P16Offset                       372      // int16_t
+#define HCL_ChT2P16BoundaryHour                 374      // uint8_t
+#define HCL_ChT2P16BoundaryMinute               375      // uint8_t
+#define HCL_ChT2P16Cct                          376      // uint16_t
+#define HCL_ChScene1Active                      378      // 1 Bit, Bit 7
+#define     HCL_ChScene1ActiveMask 0x80
+#define     HCL_ChScene1ActiveShift 7
+#define HCL_ChScene1Type                        378      // 3 Bits, Bit 6-4
+#define     HCL_ChScene1TypeMask 0x70
+#define     HCL_ChScene1TypeShift 4
+#define HCL_ChScene1Resume                      378      // 2 Bits, Bit 3-2
+#define     HCL_ChScene1ResumeMask 0x0C
+#define     HCL_ChScene1ResumeShift 2
+#define HCL_ChScene1Fixed                       378      // 1 Bit, Bit 1
+#define     HCL_ChScene1FixedMask 0x02
+#define     HCL_ChScene1FixedShift 1
+#define HCL_ChScene1ExtCctLockState             378      // 1 Bit, Bit 0
+#define     HCL_ChScene1ExtCctLockStateMask 0x01
+#define     HCL_ChScene1ExtCctLockStateShift 0
+#define HCL_ChScene1Number                      379      // uint8_t
+#define HCL_ChScene1Brightness                  380      // uint8_t
+#define HCL_ChScene1Cct                         381      // uint16_t
+#define HCL_ChScene2Active                      383      // 1 Bit, Bit 7
+#define     HCL_ChScene2ActiveMask 0x80
+#define     HCL_ChScene2ActiveShift 7
+#define HCL_ChScene2Type                        383      // 3 Bits, Bit 6-4
+#define     HCL_ChScene2TypeMask 0x70
+#define     HCL_ChScene2TypeShift 4
+#define HCL_ChScene2Resume                      383      // 2 Bits, Bit 3-2
+#define     HCL_ChScene2ResumeMask 0x0C
+#define     HCL_ChScene2ResumeShift 2
+#define HCL_ChScene2Fixed                       383      // 1 Bit, Bit 1
+#define     HCL_ChScene2FixedMask 0x02
+#define     HCL_ChScene2FixedShift 1
+#define HCL_ChScene2ExtCctLockState             383      // 1 Bit, Bit 0
+#define     HCL_ChScene2ExtCctLockStateMask 0x01
+#define     HCL_ChScene2ExtCctLockStateShift 0
+#define HCL_ChScene2Number                      384      // uint8_t
+#define HCL_ChScene2Brightness                  385      // uint8_t
+#define HCL_ChScene2Cct                         386      // uint16_t
+#define HCL_ChScene3Active                      388      // 1 Bit, Bit 7
+#define     HCL_ChScene3ActiveMask 0x80
+#define     HCL_ChScene3ActiveShift 7
+#define HCL_ChScene3Type                        388      // 3 Bits, Bit 6-4
+#define     HCL_ChScene3TypeMask 0x70
+#define     HCL_ChScene3TypeShift 4
+#define HCL_ChScene3Resume                      388      // 2 Bits, Bit 3-2
+#define     HCL_ChScene3ResumeMask 0x0C
+#define     HCL_ChScene3ResumeShift 2
+#define HCL_ChScene3Fixed                       388      // 1 Bit, Bit 1
+#define     HCL_ChScene3FixedMask 0x02
+#define     HCL_ChScene3FixedShift 1
+#define HCL_ChScene3ExtCctLockState             388      // 1 Bit, Bit 0
+#define     HCL_ChScene3ExtCctLockStateMask 0x01
+#define     HCL_ChScene3ExtCctLockStateShift 0
+#define HCL_ChScene3Number                      389      // uint8_t
+#define HCL_ChScene3Brightness                  390      // uint8_t
+#define HCL_ChScene3Cct                         391      // uint16_t
+#define HCL_ChScene4Active                      393      // 1 Bit, Bit 7
+#define     HCL_ChScene4ActiveMask 0x80
+#define     HCL_ChScene4ActiveShift 7
+#define HCL_ChScene4Type                        393      // 3 Bits, Bit 6-4
+#define     HCL_ChScene4TypeMask 0x70
+#define     HCL_ChScene4TypeShift 4
+#define HCL_ChScene4Resume                      393      // 2 Bits, Bit 3-2
+#define     HCL_ChScene4ResumeMask 0x0C
+#define     HCL_ChScene4ResumeShift 2
+#define HCL_ChScene4Fixed                       393      // 1 Bit, Bit 1
+#define     HCL_ChScene4FixedMask 0x02
+#define     HCL_ChScene4FixedShift 1
+#define HCL_ChScene4ExtCctLockState             393      // 1 Bit, Bit 0
+#define     HCL_ChScene4ExtCctLockStateMask 0x01
+#define     HCL_ChScene4ExtCctLockStateShift 0
+#define HCL_ChScene4Number                      394      // uint8_t
+#define HCL_ChScene4Brightness                  395      // uint8_t
+#define HCL_ChScene4Cct                         396      // uint16_t
+#define HCL_ChScene5Active                      398      // 1 Bit, Bit 7
+#define     HCL_ChScene5ActiveMask 0x80
+#define     HCL_ChScene5ActiveShift 7
+#define HCL_ChScene5Type                        398      // 3 Bits, Bit 6-4
+#define     HCL_ChScene5TypeMask 0x70
+#define     HCL_ChScene5TypeShift 4
+#define HCL_ChScene5Resume                      398      // 2 Bits, Bit 3-2
+#define     HCL_ChScene5ResumeMask 0x0C
+#define     HCL_ChScene5ResumeShift 2
+#define HCL_ChScene5Fixed                       398      // 1 Bit, Bit 1
+#define     HCL_ChScene5FixedMask 0x02
+#define     HCL_ChScene5FixedShift 1
+#define HCL_ChScene5ExtCctLockState             398      // 1 Bit, Bit 0
+#define     HCL_ChScene5ExtCctLockStateMask 0x01
+#define     HCL_ChScene5ExtCctLockStateShift 0
+#define HCL_ChScene5Number                      399      // uint8_t
+#define HCL_ChScene5Brightness                  400      // uint8_t
+#define HCL_ChScene5Cct                         401      // uint16_t
+#define HCL_ChScene6Active                      403      // 1 Bit, Bit 7
+#define     HCL_ChScene6ActiveMask 0x80
+#define     HCL_ChScene6ActiveShift 7
+#define HCL_ChScene6Type                        403      // 3 Bits, Bit 6-4
+#define     HCL_ChScene6TypeMask 0x70
+#define     HCL_ChScene6TypeShift 4
+#define HCL_ChScene6Resume                      403      // 2 Bits, Bit 3-2
+#define     HCL_ChScene6ResumeMask 0x0C
+#define     HCL_ChScene6ResumeShift 2
+#define HCL_ChScene6Fixed                       403      // 1 Bit, Bit 1
+#define     HCL_ChScene6FixedMask 0x02
+#define     HCL_ChScene6FixedShift 1
+#define HCL_ChScene6ExtCctLockState             403      // 1 Bit, Bit 0
+#define     HCL_ChScene6ExtCctLockStateMask 0x01
+#define     HCL_ChScene6ExtCctLockStateShift 0
+#define HCL_ChScene6Number                      404      // uint8_t
+#define HCL_ChScene6Brightness                  405      // uint8_t
+#define HCL_ChScene6Cct                         406      // uint16_t
+#define HCL_ChScene7Active                      408      // 1 Bit, Bit 7
+#define     HCL_ChScene7ActiveMask 0x80
+#define     HCL_ChScene7ActiveShift 7
+#define HCL_ChScene7Type                        408      // 3 Bits, Bit 6-4
+#define     HCL_ChScene7TypeMask 0x70
+#define     HCL_ChScene7TypeShift 4
+#define HCL_ChScene7Resume                      408      // 2 Bits, Bit 3-2
+#define     HCL_ChScene7ResumeMask 0x0C
+#define     HCL_ChScene7ResumeShift 2
+#define HCL_ChScene7Fixed                       408      // 1 Bit, Bit 1
+#define     HCL_ChScene7FixedMask 0x02
+#define     HCL_ChScene7FixedShift 1
+#define HCL_ChScene7ExtCctLockState             408      // 1 Bit, Bit 0
+#define     HCL_ChScene7ExtCctLockStateMask 0x01
+#define     HCL_ChScene7ExtCctLockStateShift 0
+#define HCL_ChScene7Number                      409      // uint8_t
+#define HCL_ChScene7Brightness                  410      // uint8_t
+#define HCL_ChScene7Cct                         411      // uint16_t
+#define HCL_ChScene8Active                      413      // 1 Bit, Bit 7
+#define     HCL_ChScene8ActiveMask 0x80
+#define     HCL_ChScene8ActiveShift 7
+#define HCL_ChScene8Type                        413      // 3 Bits, Bit 6-4
+#define     HCL_ChScene8TypeMask 0x70
+#define     HCL_ChScene8TypeShift 4
+#define HCL_ChScene8Resume                      413      // 2 Bits, Bit 3-2
+#define     HCL_ChScene8ResumeMask 0x0C
+#define     HCL_ChScene8ResumeShift 2
+#define HCL_ChScene8Fixed                       413      // 1 Bit, Bit 1
+#define     HCL_ChScene8FixedMask 0x02
+#define     HCL_ChScene8FixedShift 1
+#define HCL_ChScene8ExtCctLockState             413      // 1 Bit, Bit 0
+#define     HCL_ChScene8ExtCctLockStateMask 0x01
+#define     HCL_ChScene8ExtCctLockStateShift 0
+#define HCL_ChScene8Number                      414      // uint8_t
+#define HCL_ChScene8Brightness                  415      // uint8_t
+#define HCL_ChScene8Cct                         416      // uint16_t
+
+// Kanal aktiv
+#define ParamHCL_ChActive                            ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChActive)) & HCL_ChActiveMask))
+// Szenen aktivieren
+#define ParamHCL_ChScenesActive                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScenesActive)) & HCL_ChScenesActiveMask))
+// Start/Stop-KO aktivieren
+#define ParamHCL_ChStartStopKoActive                 ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChStartStopKoActive)) & HCL_ChStartStopKoActiveMask))
+// Eingangs-KO Externe Farbtemperatur aktivieren
+#define ParamHCL_ChExternalCctKoActive               ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChExternalCctKoActive)) & HCL_ChExternalCctKoActiveMask))
+// Sperr-KO Externe Farbtemperatur aktivieren
+#define ParamHCL_ChExternalCctLockKoActive           ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChExternalCctLockKoActive)) & HCL_ChExternalCctLockKoActiveMask))
+// HCL-Sperr-KO aktivieren
+#define ParamHCL_ChHclLockKoActive                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChHclLockKoActive)) & HCL_ChHclLockKoActiveMask))
+// Szenen-KO aktivieren
+#define ParamHCL_ChSceneRecallKoActive               ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSceneRecallKoActive)) & HCL_ChSceneRecallKoActiveMask))
+// Helligkeit senden
+#define ParamHCL_ChSendTargetBrightness              ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendTargetBrightness)) & HCL_ChSendTargetBrightnessMask))
+// Farbtemperatur senden
+#define ParamHCL_ChSendTargetCct                     ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendTargetCct)) & HCL_ChSendTargetCctMask))
+// Sollwert kombiniert senden
+#define ParamHCL_ChSendTargetCombined                ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendTargetCombined)) & HCL_ChSendTargetCombinedMask))
+// HCL aktiv Status-KO aktivieren
+#define ParamHCL_ChSendStatusRunning                 ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendStatusRunning)) & HCL_ChSendStatusRunningMask))
+// Tabelle 2 aktiv Status-KO aktivieren
+#define ParamHCL_ChSendStatusTable                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendStatusTable)) & HCL_ChSendStatusTableMask))
+// Externe Farbtemperatur aktiv Status-KO aktivieren
+#define ParamHCL_ChSendStatusExternal                ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendStatusExternal)) & HCL_ChSendStatusExternalMask))
+// Sperre aktiv Status-KO aktivieren
+#define ParamHCL_ChSendStatusLock                    ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendStatusLock)) & HCL_ChSendStatusLockMask))
+// Aktive Szene Status-KO aktivieren
+#define ParamHCL_ChSendStatusScene                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChSendStatusScene)) & HCL_ChSendStatusSceneMask))
+// Standard-Tabellenquelle
+#define ParamHCL_ChDefaultTableSource                ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChDefaultTableSource)) & HCL_ChDefaultTableSourceMask))
+// Referenzmodus
+#define ParamHCL_ChReferenceMode                     ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChReferenceMode)) & HCL_ChReferenceModeMask))
+// Referenzkanal
+#define ParamHCL_ChReferenceChannel                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChReferenceChannel)))
+// Helligkeits-Skalierung
+#define ParamHCL_ChBrightnessScale                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChBrightnessScale)))
+// Farbtemperatur-Skalierung
+#define ParamHCL_ChCctScale                          (knx.paramByte(HCL_ParamCalcIndex(HCL_ChCctScale)))
+// Save-Verhalten
+#define ParamHCL_ChSceneSavePolicy                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChSceneSavePolicy)) & HCL_ChSceneSavePolicyMask) >> HCL_ChSceneSavePolicyShift)
+// Rueckkehr nach externer Farbtemperatur
+#define ParamHCL_ChExtCctFallbackMode                ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChExtCctFallbackMode)) & HCL_ChExtCctFallbackModeMask) >> HCL_ChExtCctFallbackModeShift)
+// Bei Sperren
+#define ParamHCL_ChLockAction                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChLockAction)) & HCL_ChLockActionMask) >> HCL_ChLockActionShift)
+// Interner Verlauf
+#define ParamHCL_ChLockProgressMode                  ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChLockProgressMode)) & HCL_ChLockProgressModeMask))
+// Bei Entsperren
+#define ParamHCL_ChUnlockBehavior                    ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChUnlockBehavior)) & HCL_ChUnlockBehaviorMask) >> HCL_ChUnlockBehaviorShift)
+// Rueckkehr-Zeitbasis
+#define ParamHCL_ChReturnTimeBase                    ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChReturnTimeBase)) & HCL_ChReturnTimeBaseMask) >> HCL_ChReturnTimeBaseShift)
+// Rueckkehr-Zeit
+#define ParamHCL_ChReturnTimeTime                    ((knx.paramWord(HCL_ParamCalcIndex(HCL_ChReturnTimeTime)) & HCL_ChReturnTimeTimeMask) >> HCL_ChReturnTimeTimeShift)
+// Rueckkehr-Zeit (in Millisekunden)
+#define ParamHCL_ChReturnTimeTimeMS                  (paramDelay(knx.paramWord(HCL_ParamCalcIndex(HCL_ChReturnTimeTime))))
+// Aktive Punkte
+#define ParamHCL_ChWeekdayPointCount                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChWeekdayPointCount)))
+// Aktive Punkte
+#define ParamHCL_ChWeekendPointCount                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChWeekendPointCount)))
+// HCL steuert
+#define ParamHCL_ChControlMode                       ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChControlMode)) & HCL_ChControlModeMask) >> HCL_ChControlModeShift)
+// Mindestaenderung Prozent
+#define ParamHCL_ChBrightnessMinChangePercent        (knx.paramByte(HCL_ParamCalcIndex(HCL_ChBrightnessMinChangePercent)))
+// Mindestaenderung Absolut
+#define ParamHCL_ChBrightnessMinChangeAbsolute       (knx.paramByte(HCL_ParamCalcIndex(HCL_ChBrightnessMinChangeAbsolute)))
+// Zeitbasis
+#define ParamHCL_ChBrightnessCyclicBase              ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChBrightnessCyclicBase)) & HCL_ChBrightnessCyclicBaseMask) >> HCL_ChBrightnessCyclicBaseShift)
+// Zeit
+#define ParamHCL_ChBrightnessCyclicTime              (knx.paramWord(HCL_ParamCalcIndex(HCL_ChBrightnessCyclicTime)) & HCL_ChBrightnessCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamHCL_ChBrightnessCyclicTimeMS            (paramDelay(knx.paramWord(HCL_ParamCalcIndex(HCL_ChBrightnessCyclicTime))))
+// Mindestaenderung Prozent
+#define ParamHCL_ChCctMinChangePercent               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChCctMinChangePercent)))
+// Mindestaenderung Absolut
+#define ParamHCL_ChCctMinChangeAbsolute              (knx.paramWord(HCL_ParamCalcIndex(HCL_ChCctMinChangeAbsolute)))
+// Zeitbasis
+#define ParamHCL_ChCctCyclicBase                     ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChCctCyclicBase)) & HCL_ChCctCyclicBaseMask) >> HCL_ChCctCyclicBaseShift)
+// Zeit
+#define ParamHCL_ChCctCyclicTime                     (knx.paramWord(HCL_ParamCalcIndex(HCL_ChCctCyclicTime)) & HCL_ChCctCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamHCL_ChCctCyclicTimeMS                   (paramDelay(knx.paramWord(HCL_ParamCalcIndex(HCL_ChCctCyclicTime))))
+// Zeitbasis
+#define ParamHCL_ChCombinedCyclicBase                ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChCombinedCyclicBase)) & HCL_ChCombinedCyclicBaseMask) >> HCL_ChCombinedCyclicBaseShift)
+// Zeit
+#define ParamHCL_ChCombinedCyclicTime                (knx.paramWord(HCL_ParamCalcIndex(HCL_ChCombinedCyclicTime)) & HCL_ChCombinedCyclicTimeMask)
+// Zeit (in Millisekunden)
+#define ParamHCL_ChCombinedCyclicTimeMS              (paramDelay(knx.paramWord(HCL_ParamCalcIndex(HCL_ChCombinedCyclicTime))))
+// 
+#define ParamHCL_ChT1P01UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01UsesOffset)) & HCL_ChT1P01UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P01AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01AnchorType)) & HCL_ChT1P01AnchorTypeMask) >> HCL_ChT1P01AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P01BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01BoundaryMode)) & HCL_ChT1P01BoundaryModeMask) >> HCL_ChT1P01BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P01ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01ExtCctMode)) & HCL_ChT1P01ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P01ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P01Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01Brightness)))
+// Stunde
+#define ParamHCL_ChT1P01TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01TimeHour)))
+// Min
+#define ParamHCL_ChT1P01TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P01Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P01Offset)))
+// Stunde
+#define ParamHCL_ChT1P01BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P01BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P01BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P01Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P01Cct)))
+// 
+#define ParamHCL_ChT1P02UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02UsesOffset)) & HCL_ChT1P02UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P02AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02AnchorType)) & HCL_ChT1P02AnchorTypeMask) >> HCL_ChT1P02AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P02BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02BoundaryMode)) & HCL_ChT1P02BoundaryModeMask) >> HCL_ChT1P02BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P02ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02ExtCctMode)) & HCL_ChT1P02ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P02ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P02Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02Brightness)))
+// Stunde
+#define ParamHCL_ChT1P02TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02TimeHour)))
+// Min
+#define ParamHCL_ChT1P02TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P02Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P02Offset)))
+// Stunde
+#define ParamHCL_ChT1P02BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P02BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P02BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P02Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P02Cct)))
+// 
+#define ParamHCL_ChT1P03UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03UsesOffset)) & HCL_ChT1P03UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P03AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03AnchorType)) & HCL_ChT1P03AnchorTypeMask) >> HCL_ChT1P03AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P03BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03BoundaryMode)) & HCL_ChT1P03BoundaryModeMask) >> HCL_ChT1P03BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P03ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03ExtCctMode)) & HCL_ChT1P03ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P03ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P03Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03Brightness)))
+// Stunde
+#define ParamHCL_ChT1P03TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03TimeHour)))
+// Min
+#define ParamHCL_ChT1P03TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P03Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P03Offset)))
+// Stunde
+#define ParamHCL_ChT1P03BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P03BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P03BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P03Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P03Cct)))
+// 
+#define ParamHCL_ChT1P04UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04UsesOffset)) & HCL_ChT1P04UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P04AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04AnchorType)) & HCL_ChT1P04AnchorTypeMask) >> HCL_ChT1P04AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P04BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04BoundaryMode)) & HCL_ChT1P04BoundaryModeMask) >> HCL_ChT1P04BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P04ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04ExtCctMode)) & HCL_ChT1P04ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P04ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P04Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04Brightness)))
+// Stunde
+#define ParamHCL_ChT1P04TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04TimeHour)))
+// Min
+#define ParamHCL_ChT1P04TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P04Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P04Offset)))
+// Stunde
+#define ParamHCL_ChT1P04BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P04BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P04BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P04Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P04Cct)))
+// 
+#define ParamHCL_ChT1P05UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05UsesOffset)) & HCL_ChT1P05UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P05AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05AnchorType)) & HCL_ChT1P05AnchorTypeMask) >> HCL_ChT1P05AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P05BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05BoundaryMode)) & HCL_ChT1P05BoundaryModeMask) >> HCL_ChT1P05BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P05ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05ExtCctMode)) & HCL_ChT1P05ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P05ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P05Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05Brightness)))
+// Stunde
+#define ParamHCL_ChT1P05TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05TimeHour)))
+// Min
+#define ParamHCL_ChT1P05TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P05Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P05Offset)))
+// Stunde
+#define ParamHCL_ChT1P05BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P05BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P05BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P05Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P05Cct)))
+// 
+#define ParamHCL_ChT1P06UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06UsesOffset)) & HCL_ChT1P06UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P06AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06AnchorType)) & HCL_ChT1P06AnchorTypeMask) >> HCL_ChT1P06AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P06BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06BoundaryMode)) & HCL_ChT1P06BoundaryModeMask) >> HCL_ChT1P06BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P06ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06ExtCctMode)) & HCL_ChT1P06ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P06ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P06Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06Brightness)))
+// Stunde
+#define ParamHCL_ChT1P06TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06TimeHour)))
+// Min
+#define ParamHCL_ChT1P06TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P06Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P06Offset)))
+// Stunde
+#define ParamHCL_ChT1P06BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P06BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P06BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P06Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P06Cct)))
+// 
+#define ParamHCL_ChT1P07UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07UsesOffset)) & HCL_ChT1P07UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P07AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07AnchorType)) & HCL_ChT1P07AnchorTypeMask) >> HCL_ChT1P07AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P07BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07BoundaryMode)) & HCL_ChT1P07BoundaryModeMask) >> HCL_ChT1P07BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P07ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07ExtCctMode)) & HCL_ChT1P07ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P07ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P07Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07Brightness)))
+// Stunde
+#define ParamHCL_ChT1P07TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07TimeHour)))
+// Min
+#define ParamHCL_ChT1P07TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P07Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P07Offset)))
+// Stunde
+#define ParamHCL_ChT1P07BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P07BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P07BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P07Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P07Cct)))
+// 
+#define ParamHCL_ChT1P08UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08UsesOffset)) & HCL_ChT1P08UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P08AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08AnchorType)) & HCL_ChT1P08AnchorTypeMask) >> HCL_ChT1P08AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P08BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08BoundaryMode)) & HCL_ChT1P08BoundaryModeMask) >> HCL_ChT1P08BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P08ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08ExtCctMode)) & HCL_ChT1P08ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P08ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P08Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08Brightness)))
+// Stunde
+#define ParamHCL_ChT1P08TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08TimeHour)))
+// Min
+#define ParamHCL_ChT1P08TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P08Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P08Offset)))
+// Stunde
+#define ParamHCL_ChT1P08BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P08BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P08BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P08Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P08Cct)))
+// 
+#define ParamHCL_ChT1P09UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09UsesOffset)) & HCL_ChT1P09UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P09AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09AnchorType)) & HCL_ChT1P09AnchorTypeMask) >> HCL_ChT1P09AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P09BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09BoundaryMode)) & HCL_ChT1P09BoundaryModeMask) >> HCL_ChT1P09BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P09ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09ExtCctMode)) & HCL_ChT1P09ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P09ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P09Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09Brightness)))
+// Stunde
+#define ParamHCL_ChT1P09TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09TimeHour)))
+// Min
+#define ParamHCL_ChT1P09TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P09Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P09Offset)))
+// Stunde
+#define ParamHCL_ChT1P09BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P09BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P09BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P09Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P09Cct)))
+// 
+#define ParamHCL_ChT1P10UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10UsesOffset)) & HCL_ChT1P10UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P10AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10AnchorType)) & HCL_ChT1P10AnchorTypeMask) >> HCL_ChT1P10AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P10BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10BoundaryMode)) & HCL_ChT1P10BoundaryModeMask) >> HCL_ChT1P10BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P10ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10ExtCctMode)) & HCL_ChT1P10ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P10ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P10Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10Brightness)))
+// Stunde
+#define ParamHCL_ChT1P10TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10TimeHour)))
+// Min
+#define ParamHCL_ChT1P10TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P10Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P10Offset)))
+// Stunde
+#define ParamHCL_ChT1P10BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P10BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P10BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P10Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P10Cct)))
+// 
+#define ParamHCL_ChT1P11UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11UsesOffset)) & HCL_ChT1P11UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P11AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11AnchorType)) & HCL_ChT1P11AnchorTypeMask) >> HCL_ChT1P11AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P11BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11BoundaryMode)) & HCL_ChT1P11BoundaryModeMask) >> HCL_ChT1P11BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P11ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11ExtCctMode)) & HCL_ChT1P11ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P11ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P11Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11Brightness)))
+// Stunde
+#define ParamHCL_ChT1P11TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11TimeHour)))
+// Min
+#define ParamHCL_ChT1P11TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P11Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P11Offset)))
+// Stunde
+#define ParamHCL_ChT1P11BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P11BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P11BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P11Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P11Cct)))
+// 
+#define ParamHCL_ChT1P12UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12UsesOffset)) & HCL_ChT1P12UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P12AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12AnchorType)) & HCL_ChT1P12AnchorTypeMask) >> HCL_ChT1P12AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P12BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12BoundaryMode)) & HCL_ChT1P12BoundaryModeMask) >> HCL_ChT1P12BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P12ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12ExtCctMode)) & HCL_ChT1P12ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P12ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P12Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12Brightness)))
+// Stunde
+#define ParamHCL_ChT1P12TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12TimeHour)))
+// Min
+#define ParamHCL_ChT1P12TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P12Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P12Offset)))
+// Stunde
+#define ParamHCL_ChT1P12BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P12BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P12BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P12Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P12Cct)))
+// 
+#define ParamHCL_ChT1P13UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13UsesOffset)) & HCL_ChT1P13UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P13AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13AnchorType)) & HCL_ChT1P13AnchorTypeMask) >> HCL_ChT1P13AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P13BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13BoundaryMode)) & HCL_ChT1P13BoundaryModeMask) >> HCL_ChT1P13BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P13ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13ExtCctMode)) & HCL_ChT1P13ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P13ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P13Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13Brightness)))
+// Stunde
+#define ParamHCL_ChT1P13TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13TimeHour)))
+// Min
+#define ParamHCL_ChT1P13TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P13Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P13Offset)))
+// Stunde
+#define ParamHCL_ChT1P13BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P13BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P13BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P13Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P13Cct)))
+// 
+#define ParamHCL_ChT1P14UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14UsesOffset)) & HCL_ChT1P14UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P14AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14AnchorType)) & HCL_ChT1P14AnchorTypeMask) >> HCL_ChT1P14AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P14BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14BoundaryMode)) & HCL_ChT1P14BoundaryModeMask) >> HCL_ChT1P14BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P14ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14ExtCctMode)) & HCL_ChT1P14ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P14ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P14Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14Brightness)))
+// Stunde
+#define ParamHCL_ChT1P14TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14TimeHour)))
+// Min
+#define ParamHCL_ChT1P14TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P14Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P14Offset)))
+// Stunde
+#define ParamHCL_ChT1P14BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P14BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P14BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P14Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P14Cct)))
+// 
+#define ParamHCL_ChT1P15UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15UsesOffset)) & HCL_ChT1P15UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P15AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15AnchorType)) & HCL_ChT1P15AnchorTypeMask) >> HCL_ChT1P15AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P15BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15BoundaryMode)) & HCL_ChT1P15BoundaryModeMask) >> HCL_ChT1P15BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P15ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15ExtCctMode)) & HCL_ChT1P15ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P15ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P15Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15Brightness)))
+// Stunde
+#define ParamHCL_ChT1P15TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15TimeHour)))
+// Min
+#define ParamHCL_ChT1P15TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P15Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P15Offset)))
+// Stunde
+#define ParamHCL_ChT1P15BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P15BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P15BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P15Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P15Cct)))
+// 
+#define ParamHCL_ChT1P16UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16UsesOffset)) & HCL_ChT1P16UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT1P16AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16AnchorType)) & HCL_ChT1P16AnchorTypeMask) >> HCL_ChT1P16AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT1P16BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16BoundaryMode)) & HCL_ChT1P16BoundaryModeMask) >> HCL_ChT1P16BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT1P16ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16ExtCctMode)) & HCL_ChT1P16ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT1P16ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT1P16Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16Brightness)))
+// Stunde
+#define ParamHCL_ChT1P16TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16TimeHour)))
+// Min
+#define ParamHCL_ChT1P16TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16TimeMinute)))
+// Offset
+#define ParamHCL_ChT1P16Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P16Offset)))
+// Stunde
+#define ParamHCL_ChT1P16BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16BoundaryHour)))
+// Min
+#define ParamHCL_ChT1P16BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT1P16BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT1P16Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT1P16Cct)))
+// 
+#define ParamHCL_ChT2P01UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01UsesOffset)) & HCL_ChT2P01UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P01AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01AnchorType)) & HCL_ChT2P01AnchorTypeMask) >> HCL_ChT2P01AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P01BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01BoundaryMode)) & HCL_ChT2P01BoundaryModeMask) >> HCL_ChT2P01BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P01ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01ExtCctMode)) & HCL_ChT2P01ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P01ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P01Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01Brightness)))
+// Stunde
+#define ParamHCL_ChT2P01TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01TimeHour)))
+// Min
+#define ParamHCL_ChT2P01TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P01Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P01Offset)))
+// Stunde
+#define ParamHCL_ChT2P01BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P01BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P01BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P01Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P01Cct)))
+// 
+#define ParamHCL_ChT2P02UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02UsesOffset)) & HCL_ChT2P02UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P02AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02AnchorType)) & HCL_ChT2P02AnchorTypeMask) >> HCL_ChT2P02AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P02BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02BoundaryMode)) & HCL_ChT2P02BoundaryModeMask) >> HCL_ChT2P02BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P02ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02ExtCctMode)) & HCL_ChT2P02ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P02ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P02Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02Brightness)))
+// Stunde
+#define ParamHCL_ChT2P02TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02TimeHour)))
+// Min
+#define ParamHCL_ChT2P02TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P02Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P02Offset)))
+// Stunde
+#define ParamHCL_ChT2P02BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P02BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P02BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P02Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P02Cct)))
+// 
+#define ParamHCL_ChT2P03UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03UsesOffset)) & HCL_ChT2P03UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P03AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03AnchorType)) & HCL_ChT2P03AnchorTypeMask) >> HCL_ChT2P03AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P03BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03BoundaryMode)) & HCL_ChT2P03BoundaryModeMask) >> HCL_ChT2P03BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P03ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03ExtCctMode)) & HCL_ChT2P03ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P03ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P03Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03Brightness)))
+// Stunde
+#define ParamHCL_ChT2P03TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03TimeHour)))
+// Min
+#define ParamHCL_ChT2P03TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P03Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P03Offset)))
+// Stunde
+#define ParamHCL_ChT2P03BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P03BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P03BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P03Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P03Cct)))
+// 
+#define ParamHCL_ChT2P04UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04UsesOffset)) & HCL_ChT2P04UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P04AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04AnchorType)) & HCL_ChT2P04AnchorTypeMask) >> HCL_ChT2P04AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P04BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04BoundaryMode)) & HCL_ChT2P04BoundaryModeMask) >> HCL_ChT2P04BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P04ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04ExtCctMode)) & HCL_ChT2P04ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P04ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P04Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04Brightness)))
+// Stunde
+#define ParamHCL_ChT2P04TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04TimeHour)))
+// Min
+#define ParamHCL_ChT2P04TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P04Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P04Offset)))
+// Stunde
+#define ParamHCL_ChT2P04BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P04BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P04BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P04Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P04Cct)))
+// 
+#define ParamHCL_ChT2P05UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05UsesOffset)) & HCL_ChT2P05UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P05AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05AnchorType)) & HCL_ChT2P05AnchorTypeMask) >> HCL_ChT2P05AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P05BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05BoundaryMode)) & HCL_ChT2P05BoundaryModeMask) >> HCL_ChT2P05BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P05ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05ExtCctMode)) & HCL_ChT2P05ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P05ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P05Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05Brightness)))
+// Stunde
+#define ParamHCL_ChT2P05TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05TimeHour)))
+// Min
+#define ParamHCL_ChT2P05TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P05Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P05Offset)))
+// Stunde
+#define ParamHCL_ChT2P05BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P05BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P05BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P05Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P05Cct)))
+// 
+#define ParamHCL_ChT2P06UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06UsesOffset)) & HCL_ChT2P06UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P06AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06AnchorType)) & HCL_ChT2P06AnchorTypeMask) >> HCL_ChT2P06AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P06BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06BoundaryMode)) & HCL_ChT2P06BoundaryModeMask) >> HCL_ChT2P06BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P06ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06ExtCctMode)) & HCL_ChT2P06ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P06ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P06Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06Brightness)))
+// Stunde
+#define ParamHCL_ChT2P06TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06TimeHour)))
+// Min
+#define ParamHCL_ChT2P06TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P06Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P06Offset)))
+// Stunde
+#define ParamHCL_ChT2P06BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P06BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P06BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P06Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P06Cct)))
+// 
+#define ParamHCL_ChT2P07UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07UsesOffset)) & HCL_ChT2P07UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P07AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07AnchorType)) & HCL_ChT2P07AnchorTypeMask) >> HCL_ChT2P07AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P07BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07BoundaryMode)) & HCL_ChT2P07BoundaryModeMask) >> HCL_ChT2P07BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P07ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07ExtCctMode)) & HCL_ChT2P07ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P07ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P07Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07Brightness)))
+// Stunde
+#define ParamHCL_ChT2P07TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07TimeHour)))
+// Min
+#define ParamHCL_ChT2P07TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P07Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P07Offset)))
+// Stunde
+#define ParamHCL_ChT2P07BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P07BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P07BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P07Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P07Cct)))
+// 
+#define ParamHCL_ChT2P08UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08UsesOffset)) & HCL_ChT2P08UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P08AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08AnchorType)) & HCL_ChT2P08AnchorTypeMask) >> HCL_ChT2P08AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P08BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08BoundaryMode)) & HCL_ChT2P08BoundaryModeMask) >> HCL_ChT2P08BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P08ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08ExtCctMode)) & HCL_ChT2P08ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P08ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P08Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08Brightness)))
+// Stunde
+#define ParamHCL_ChT2P08TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08TimeHour)))
+// Min
+#define ParamHCL_ChT2P08TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P08Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P08Offset)))
+// Stunde
+#define ParamHCL_ChT2P08BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P08BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P08BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P08Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P08Cct)))
+// 
+#define ParamHCL_ChT2P09UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09UsesOffset)) & HCL_ChT2P09UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P09AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09AnchorType)) & HCL_ChT2P09AnchorTypeMask) >> HCL_ChT2P09AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P09BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09BoundaryMode)) & HCL_ChT2P09BoundaryModeMask) >> HCL_ChT2P09BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P09ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09ExtCctMode)) & HCL_ChT2P09ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P09ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P09Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09Brightness)))
+// Stunde
+#define ParamHCL_ChT2P09TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09TimeHour)))
+// Min
+#define ParamHCL_ChT2P09TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P09Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P09Offset)))
+// Stunde
+#define ParamHCL_ChT2P09BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P09BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P09BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P09Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P09Cct)))
+// 
+#define ParamHCL_ChT2P10UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10UsesOffset)) & HCL_ChT2P10UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P10AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10AnchorType)) & HCL_ChT2P10AnchorTypeMask) >> HCL_ChT2P10AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P10BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10BoundaryMode)) & HCL_ChT2P10BoundaryModeMask) >> HCL_ChT2P10BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P10ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10ExtCctMode)) & HCL_ChT2P10ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P10ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P10Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10Brightness)))
+// Stunde
+#define ParamHCL_ChT2P10TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10TimeHour)))
+// Min
+#define ParamHCL_ChT2P10TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P10Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P10Offset)))
+// Stunde
+#define ParamHCL_ChT2P10BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P10BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P10BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P10Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P10Cct)))
+// 
+#define ParamHCL_ChT2P11UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11UsesOffset)) & HCL_ChT2P11UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P11AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11AnchorType)) & HCL_ChT2P11AnchorTypeMask) >> HCL_ChT2P11AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P11BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11BoundaryMode)) & HCL_ChT2P11BoundaryModeMask) >> HCL_ChT2P11BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P11ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11ExtCctMode)) & HCL_ChT2P11ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P11ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P11Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11Brightness)))
+// Stunde
+#define ParamHCL_ChT2P11TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11TimeHour)))
+// Min
+#define ParamHCL_ChT2P11TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P11Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P11Offset)))
+// Stunde
+#define ParamHCL_ChT2P11BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P11BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P11BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P11Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P11Cct)))
+// 
+#define ParamHCL_ChT2P12UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12UsesOffset)) & HCL_ChT2P12UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P12AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12AnchorType)) & HCL_ChT2P12AnchorTypeMask) >> HCL_ChT2P12AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P12BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12BoundaryMode)) & HCL_ChT2P12BoundaryModeMask) >> HCL_ChT2P12BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P12ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12ExtCctMode)) & HCL_ChT2P12ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P12ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P12Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12Brightness)))
+// Stunde
+#define ParamHCL_ChT2P12TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12TimeHour)))
+// Min
+#define ParamHCL_ChT2P12TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P12Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P12Offset)))
+// Stunde
+#define ParamHCL_ChT2P12BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P12BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P12BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P12Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P12Cct)))
+// 
+#define ParamHCL_ChT2P13UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13UsesOffset)) & HCL_ChT2P13UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P13AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13AnchorType)) & HCL_ChT2P13AnchorTypeMask) >> HCL_ChT2P13AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P13BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13BoundaryMode)) & HCL_ChT2P13BoundaryModeMask) >> HCL_ChT2P13BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P13ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13ExtCctMode)) & HCL_ChT2P13ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P13ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P13Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13Brightness)))
+// Stunde
+#define ParamHCL_ChT2P13TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13TimeHour)))
+// Min
+#define ParamHCL_ChT2P13TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P13Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P13Offset)))
+// Stunde
+#define ParamHCL_ChT2P13BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P13BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P13BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P13Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P13Cct)))
+// 
+#define ParamHCL_ChT2P14UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14UsesOffset)) & HCL_ChT2P14UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P14AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14AnchorType)) & HCL_ChT2P14AnchorTypeMask) >> HCL_ChT2P14AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P14BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14BoundaryMode)) & HCL_ChT2P14BoundaryModeMask) >> HCL_ChT2P14BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P14ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14ExtCctMode)) & HCL_ChT2P14ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P14ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P14Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14Brightness)))
+// Stunde
+#define ParamHCL_ChT2P14TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14TimeHour)))
+// Min
+#define ParamHCL_ChT2P14TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P14Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P14Offset)))
+// Stunde
+#define ParamHCL_ChT2P14BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P14BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P14BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P14Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P14Cct)))
+// 
+#define ParamHCL_ChT2P15UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15UsesOffset)) & HCL_ChT2P15UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P15AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15AnchorType)) & HCL_ChT2P15AnchorTypeMask) >> HCL_ChT2P15AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P15BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15BoundaryMode)) & HCL_ChT2P15BoundaryModeMask) >> HCL_ChT2P15BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P15ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15ExtCctMode)) & HCL_ChT2P15ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P15ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P15Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15Brightness)))
+// Stunde
+#define ParamHCL_ChT2P15TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15TimeHour)))
+// Min
+#define ParamHCL_ChT2P15TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P15Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P15Offset)))
+// Stunde
+#define ParamHCL_ChT2P15BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P15BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P15BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P15Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P15Cct)))
+// 
+#define ParamHCL_ChT2P16UsesOffset                   ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16UsesOffset)) & HCL_ChT2P16UsesOffsetMask))
+// Typ
+#define ParamHCL_ChT2P16AnchorType                   ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16AnchorType)) & HCL_ChT2P16AnchorTypeMask) >> HCL_ChT2P16AnchorTypeShift)
+// Nicht vor/nach
+#define ParamHCL_ChT2P16BoundaryMode                 ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16BoundaryMode)) & HCL_ChT2P16BoundaryModeMask) >> HCL_ChT2P16BoundaryModeShift)
+// Externe Farbtemperatur
+#define ParamHCL_ChT2P16ExtCctMode                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16ExtCctMode)) & HCL_ChT2P16ExtCctModeMask)
+// Mix
+#define ParamHCL_ChT2P16ExtCctMix                    (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16ExtCctMix)))
+// Helligkeit
+#define ParamHCL_ChT2P16Brightness                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16Brightness)))
+// Stunde
+#define ParamHCL_ChT2P16TimeHour                     (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16TimeHour)))
+// Min
+#define ParamHCL_ChT2P16TimeMinute                   (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16TimeMinute)))
+// Offset
+#define ParamHCL_ChT2P16Offset                       ((int16_t)knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P16Offset)))
+// Stunde
+#define ParamHCL_ChT2P16BoundaryHour                 (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16BoundaryHour)))
+// Min
+#define ParamHCL_ChT2P16BoundaryMinute               (knx.paramByte(HCL_ParamCalcIndex(HCL_ChT2P16BoundaryMinute)))
+// Farbtemperatur
+#define ParamHCL_ChT2P16Cct                          (knx.paramWord(HCL_ParamCalcIndex(HCL_ChT2P16Cct)))
+// Szene 1 aktiv
+#define ParamHCL_ChScene1Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Active)) & HCL_ChScene1ActiveMask))
+// Typ
+#define ParamHCL_ChScene1Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Type)) & HCL_ChScene1TypeMask) >> HCL_ChScene1TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene1Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Resume)) & HCL_ChScene1ResumeMask) >> HCL_ChScene1ResumeShift)
+// Fix
+#define ParamHCL_ChScene1Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Fixed)) & HCL_ChScene1FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene1ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1ExtCctLockState)) & HCL_ChScene1ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene1Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Number)))
+// Helligkeit
+#define ParamHCL_ChScene1Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene1Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene1Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene1Cct)))
+// Szene 2 aktiv
+#define ParamHCL_ChScene2Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Active)) & HCL_ChScene2ActiveMask))
+// Typ
+#define ParamHCL_ChScene2Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Type)) & HCL_ChScene2TypeMask) >> HCL_ChScene2TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene2Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Resume)) & HCL_ChScene2ResumeMask) >> HCL_ChScene2ResumeShift)
+// Fix
+#define ParamHCL_ChScene2Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Fixed)) & HCL_ChScene2FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene2ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2ExtCctLockState)) & HCL_ChScene2ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene2Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Number)))
+// Helligkeit
+#define ParamHCL_ChScene2Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene2Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene2Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene2Cct)))
+// Szene 3 aktiv
+#define ParamHCL_ChScene3Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Active)) & HCL_ChScene3ActiveMask))
+// Typ
+#define ParamHCL_ChScene3Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Type)) & HCL_ChScene3TypeMask) >> HCL_ChScene3TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene3Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Resume)) & HCL_ChScene3ResumeMask) >> HCL_ChScene3ResumeShift)
+// Fix
+#define ParamHCL_ChScene3Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Fixed)) & HCL_ChScene3FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene3ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3ExtCctLockState)) & HCL_ChScene3ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene3Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Number)))
+// Helligkeit
+#define ParamHCL_ChScene3Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene3Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene3Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene3Cct)))
+// Szene 4 aktiv
+#define ParamHCL_ChScene4Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Active)) & HCL_ChScene4ActiveMask))
+// Typ
+#define ParamHCL_ChScene4Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Type)) & HCL_ChScene4TypeMask) >> HCL_ChScene4TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene4Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Resume)) & HCL_ChScene4ResumeMask) >> HCL_ChScene4ResumeShift)
+// Fix
+#define ParamHCL_ChScene4Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Fixed)) & HCL_ChScene4FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene4ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4ExtCctLockState)) & HCL_ChScene4ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene4Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Number)))
+// Helligkeit
+#define ParamHCL_ChScene4Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene4Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene4Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene4Cct)))
+// Szene 5 aktiv
+#define ParamHCL_ChScene5Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Active)) & HCL_ChScene5ActiveMask))
+// Typ
+#define ParamHCL_ChScene5Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Type)) & HCL_ChScene5TypeMask) >> HCL_ChScene5TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene5Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Resume)) & HCL_ChScene5ResumeMask) >> HCL_ChScene5ResumeShift)
+// Fix
+#define ParamHCL_ChScene5Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Fixed)) & HCL_ChScene5FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene5ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5ExtCctLockState)) & HCL_ChScene5ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene5Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Number)))
+// Helligkeit
+#define ParamHCL_ChScene5Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene5Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene5Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene5Cct)))
+// Szene 6 aktiv
+#define ParamHCL_ChScene6Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Active)) & HCL_ChScene6ActiveMask))
+// Typ
+#define ParamHCL_ChScene6Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Type)) & HCL_ChScene6TypeMask) >> HCL_ChScene6TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene6Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Resume)) & HCL_ChScene6ResumeMask) >> HCL_ChScene6ResumeShift)
+// Fix
+#define ParamHCL_ChScene6Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Fixed)) & HCL_ChScene6FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene6ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6ExtCctLockState)) & HCL_ChScene6ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene6Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Number)))
+// Helligkeit
+#define ParamHCL_ChScene6Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene6Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene6Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene6Cct)))
+// Szene 7 aktiv
+#define ParamHCL_ChScene7Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Active)) & HCL_ChScene7ActiveMask))
+// Typ
+#define ParamHCL_ChScene7Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Type)) & HCL_ChScene7TypeMask) >> HCL_ChScene7TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene7Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Resume)) & HCL_ChScene7ResumeMask) >> HCL_ChScene7ResumeShift)
+// Fix
+#define ParamHCL_ChScene7Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Fixed)) & HCL_ChScene7FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene7ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7ExtCctLockState)) & HCL_ChScene7ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene7Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Number)))
+// Helligkeit
+#define ParamHCL_ChScene7Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene7Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene7Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene7Cct)))
+// Szene 8 aktiv
+#define ParamHCL_ChScene8Active                      ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Active)) & HCL_ChScene8ActiveMask))
+// Typ
+#define ParamHCL_ChScene8Type                        ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Type)) & HCL_ChScene8TypeMask) >> HCL_ChScene8TypeShift)
+// Rueckkehr
+#define ParamHCL_ChScene8Resume                      ((knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Resume)) & HCL_ChScene8ResumeMask) >> HCL_ChScene8ResumeShift)
+// Fix
+#define ParamHCL_ChScene8Fixed                       ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Fixed)) & HCL_ChScene8FixedMask))
+// Externe Farbtemperatur
+#define ParamHCL_ChScene8ExtCctLockState             ((bool)(knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8ExtCctLockState)) & HCL_ChScene8ExtCctLockStateMask))
+// Szene
+#define ParamHCL_ChScene8Number                      (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Number)))
+// Helligkeit
+#define ParamHCL_ChScene8Brightness                  (knx.paramByte(HCL_ParamCalcIndex(HCL_ChScene8Brightness)))
+// Lichtfarbe
+#define ParamHCL_ChScene8Cct                         (knx.paramWord(HCL_ParamCalcIndex(HCL_ChScene8Cct)))
+
+// deprecated
+#define HCL_KoOffset 1390
+
+// Communication objects per channel (multiple occurrence)
+#define HCL_KoBlockOffset 1390
+#define HCL_KoBlockSize 20
+
+#define HCL_KoCalcNumber(index) (index + HCL_KoBlockOffset + _channelIndex * HCL_KoBlockSize)
+#define HCL_KoCalcIndex(number) ((number >= HCL_KoCalcNumber(0) && number < HCL_KoCalcNumber(HCL_KoBlockSize)) ? (number - HCL_KoBlockOffset) % HCL_KoBlockSize : -1)
+#define HCL_KoCalcChannel(number) ((number >= HCL_KoBlockOffset && number < HCL_KoBlockOffset + HCL_ChannelCount * HCL_KoBlockSize) ? (number - HCL_KoBlockOffset) / HCL_KoBlockSize : -1)
+
+#define HCL_KoChStartStop 0
+#define HCL_KoChExternalCct 1
+#define HCL_KoChExternalCctLock 2
+#define HCL_KoChHclLock 3
+#define HCL_KoChSceneRecall 4
+#define HCL_KoChBrightness 5
+#define HCL_KoChColorTemperature 6
+#define HCL_KoChTargetCombined 7
+#define HCL_KoChStatusRunning 8
+#define HCL_KoChStatusWeekend 9
+#define HCL_KoChStatusExternalCct 10
+#define HCL_KoChStatusLock 11
+#define HCL_KoChStatusSceneNumber 12
+#define HCL_KoChReserved13 13
+#define HCL_KoChReserved14 14
+#define HCL_KoChReserved15 15
+#define HCL_KoChReserved16 16
+#define HCL_KoChReserved17 17
+#define HCL_KoChReserved18 18
+#define HCL_KoChReserved19 19
+
+// HCL Start/Stop
+#define KoHCL_ChStartStop                         (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStartStop)))
+// Externe Farbtemperatur
+#define KoHCL_ChExternalCct                       (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChExternalCct)))
+// Externe Farbtemperatur Sperre
+#define KoHCL_ChExternalCctLock                   (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChExternalCctLock)))
+// HCL Sperre
+#define KoHCL_ChHclLock                           (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChHclLock)))
+// Szene
+#define KoHCL_ChSceneRecall                       (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChSceneRecall)))
+// Helligkeit
+#define KoHCL_ChBrightness                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChBrightness)))
+// Farbtemperatur
+#define KoHCL_ChColorTemperature                  (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChColorTemperature)))
+// Sollwert kombiniert
+#define KoHCL_ChTargetCombined                    (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChTargetCombined)))
+// HCL aktiv Status
+#define KoHCL_ChStatusRunning                     (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStatusRunning)))
+// Tabelle 2 aktiv Status
+#define KoHCL_ChStatusWeekend                     (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStatusWeekend)))
+// Externe Farbtemperatur aktiv Status
+#define KoHCL_ChStatusExternalCct                 (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStatusExternalCct)))
+// Sperre aktiv Status
+#define KoHCL_ChStatusLock                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStatusLock)))
+// Aktive Szene Status
+#define KoHCL_ChStatusSceneNumber                 (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChStatusSceneNumber)))
+// Reserviert
+#define KoHCL_ChReserved13                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved13)))
+// Reserviert
+#define KoHCL_ChReserved14                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved14)))
+// Reserviert
+#define KoHCL_ChReserved15                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved15)))
+// Reserviert
+#define KoHCL_ChReserved16                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved16)))
+// Reserviert
+#define KoHCL_ChReserved17                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved17)))
+// Reserviert
+#define KoHCL_ChReserved18                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved18)))
+// Reserviert
+#define KoHCL_ChReserved19                        (knx.getGroupObject(HCL_KoCalcNumber(HCL_KoChReserved19)))
+
+#define SWA_VisibleChannels                     6051      // uint8_t
+#define SWA_HardwareVariant                     6051      // 4 Bits, Bit 6-3
 #define     SWA_HardwareVariantMask 0x78
 #define     SWA_HardwareVariantShift 3
-#define SWA_TotalPowerSend                      3052      // 1 Bit, Bit 7
+#define SWA_TotalPowerSend                      6052      // 1 Bit, Bit 7
 #define     SWA_TotalPowerSendMask 0x80
 #define     SWA_TotalPowerSendShift 7
-#define SWA_TotalCurrentSend                    3052      // 1 Bit, Bit 6
+#define SWA_TotalCurrentSend                    6052      // 1 Bit, Bit 6
 #define     SWA_TotalCurrentSendMask 0x40
 #define     SWA_TotalCurrentSendShift 6
-#define SWA_TotalPowerSendMinChangePercent      3053      // uint8_t
-#define SWA_TotalPowerSendMinChangeAbsolute     3054      // uint16_t
-#define SWA_TotalPowerSendCyclicBase            3056      // 2 Bits, Bit 7-6
+#define SWA_TotalPowerSendMinChangePercent      6053      // uint8_t
+#define SWA_TotalPowerSendMinChangeAbsolute     6054      // uint16_t
+#define SWA_TotalPowerSendCyclicBase            6056      // 2 Bits, Bit 7-6
 #define     SWA_TotalPowerSendCyclicBaseMask 0xC0
 #define     SWA_TotalPowerSendCyclicBaseShift 6
-#define SWA_TotalPowerSendCyclicTime            3056      // 14 Bits, Bit 13-0
+#define SWA_TotalPowerSendCyclicTime            6056      // 14 Bits, Bit 13-0
 #define     SWA_TotalPowerSendCyclicTimeMask 0x3FFF
 #define     SWA_TotalPowerSendCyclicTimeShift 0
-#define SWA_TotalCurrentSendMinChangePercent    3058      // uint8_t
-#define SWA_TotalCurrentSendMinChangeAbsolute   3059      // uint16_t
-#define SWA_TotalCurrentSendCyclicBase          3061      // 2 Bits, Bit 7-6
+#define SWA_TotalCurrentSendMinChangePercent    6058      // uint8_t
+#define SWA_TotalCurrentSendMinChangeAbsolute   6059      // uint16_t
+#define SWA_TotalCurrentSendCyclicBase          6061      // 2 Bits, Bit 7-6
 #define     SWA_TotalCurrentSendCyclicBaseMask 0xC0
 #define     SWA_TotalCurrentSendCyclicBaseShift 6
-#define SWA_TotalCurrentSendCyclicTime          3061      // 14 Bits, Bit 13-0
+#define SWA_TotalCurrentSendCyclicTime          6061      // 14 Bits, Bit 13-0
 #define     SWA_TotalCurrentSendCyclicTimeMask 0x3FFF
 #define     SWA_TotalCurrentSendCyclicTimeShift 0
-#define SWA_FrontControlInput                   3067      // 1 Bit, Bit 7
+#define SWA_FrontControlInput                   6067      // 1 Bit, Bit 7
 #define     SWA_FrontControlInputMask 0x80
 #define     SWA_FrontControlInputShift 7
-#define SWA_FrontControlOutput                  3067      // 1 Bit, Bit 6
+#define SWA_FrontControlOutput                  6067      // 1 Bit, Bit 6
 #define     SWA_FrontControlOutputMask 0x40
 #define     SWA_FrontControlOutputShift 6
 
@@ -2673,9 +5052,9 @@
 // LED-Ausgabe aktivieren
 #define ParamSWA_FrontControlOutput                  ((bool)(knx.paramByte(SWA_FrontControlOutput) & SWA_FrontControlOutputMask))
 
-#define SWA_KoCentralFunction 570
-#define SWA_KoTotalPower 571
-#define SWA_KoTotalCurrent 572
+#define SWA_KoCentralFunction 790
+#define SWA_KoTotalPower 791
+#define SWA_KoTotalCurrent 792
 
 // Zentralfunktion
 #define KoSWA_CentralFunction                     (knx.getGroupObject(SWA_KoCentralFunction))
@@ -2687,7 +5066,7 @@
 #define SWA_ChannelCount 1
 
 // Parameter per channel
-#define SWA_ParamBlockOffset 3069
+#define SWA_ParamBlockOffset 6069
 #define SWA_ParamBlockSize 74
 #define SWA_ParamCalcIndex(index) (index + SWA_ParamBlockOffset + _channelIndex * SWA_ParamBlockSize)
 
@@ -3007,10 +5386,10 @@
 #define ParamSWA_ChSceneHNumber                      (knx.paramByte(SWA_ParamCalcIndex(SWA_ChSceneHNumber)))
 
 // deprecated
-#define SWA_KoOffset 580
+#define SWA_KoOffset 800
 
 // Communication objects per channel (multiple occurrence)
-#define SWA_KoBlockOffset 580
+#define SWA_KoBlockOffset 800
 #define SWA_KoBlockSize 9
 
 #define SWA_KoCalcNumber(index) (index + SWA_KoBlockOffset + _channelIndex * SWA_KoBlockSize)
@@ -3051,7 +5430,7 @@
 #define BI_ChannelCount 4
 
 // Parameter per channel
-#define BI_ParamBlockOffset 3143
+#define BI_ParamBlockOffset 6143
 #define BI_ParamBlockSize 4
 #define BI_ParamCalcIndex(index) (index + BI_ParamBlockOffset + _channelIndex * BI_ParamBlockSize)
 
@@ -3093,10 +5472,10 @@
 #define ParamBI_ChannelPeriodicTimeMS               (paramDelay(knx.paramWord(BI_ParamCalcIndex(BI_ChannelPeriodicTime))))
 
 // deprecated
-#define BI_KoOffset 590
+#define BI_KoOffset 810
 
 // Communication objects per channel (multiple occurrence)
-#define BI_KoBlockOffset 590
+#define BI_KoBlockOffset 810
 #define BI_KoBlockSize 1
 
 #define BI_KoCalcNumber(index) (index + BI_KoBlockOffset + _channelIndex * BI_KoBlockSize)
@@ -3108,10 +5487,10 @@
 // 
 #define KoBI_ChannelOutput                       (knx.getGroupObject(BI_KoCalcNumber(BI_KoChannelOutput)))
 
-#define BTN_ReactionTimeMultiClick              3159      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeLong                    3160      // 8 Bits, Bit 7-0
-#define BTN_ReactionTimeExtraLong               3161      // 8 Bits, Bit 7-0
-#define BTN_VisibleChannels                     3162      // uint8_t
+#define BTN_ReactionTimeMultiClick              6159      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeLong                    6160      // 8 Bits, Bit 7-0
+#define BTN_ReactionTimeExtraLong               6161      // 8 Bits, Bit 7-0
+#define BTN_VisibleChannels                     6162      // uint8_t
 
 // Mehrfach-Klick
 #define ParamBTN_ReactionTimeMultiClick              (knx.paramByte(BTN_ReactionTimeMultiClick))
@@ -3125,7 +5504,7 @@
 #define BTN_ChannelCount 10
 
 // Parameter per channel
-#define BTN_ParamBlockOffset 3163
+#define BTN_ParamBlockOffset 6163
 #define BTN_ParamBlockSize 53
 #define BTN_ParamCalcIndex(index) (index + BTN_ParamBlockOffset + _channelIndex * BTN_ParamBlockSize)
 
@@ -3593,10 +5972,10 @@
 #define ParamBTN_bStatusThresholdLow                 (knx.paramByte(BTN_ParamCalcIndex(BTN_bStatusThresholdLow)))
 
 // deprecated
-#define BTN_KoOffset 595
+#define BTN_KoOffset 815
 
 // Communication objects per channel (multiple occurrence)
-#define BTN_KoBlockOffset 595
+#define BTN_KoBlockOffset 815
 #define BTN_KoBlockSize 12
 
 #define BTN_KoCalcNumber(index) (index + BTN_KoBlockOffset + _channelIndex * BTN_KoBlockSize)
@@ -3641,198 +6020,198 @@
 // 
 #define KoBTN_Out6                                (knx.getGroupObject(BTN_KoCalcNumber(BTN_KoOut6)))
 
-#define SENS_Error                               3693      // 1 Bit, Bit 7
+#define SENS_Error                               6693      // 1 Bit, Bit 7
 #define     SENS_ErrorMask 0x80
 #define     SENS_ErrorShift 7
-#define SENS_Dewpoint                            3693      // 1 Bit, Bit 6
+#define SENS_Dewpoint                            6693      // 1 Bit, Bit 6
 #define     SENS_DewpointMask 0x40
 #define     SENS_DewpointShift 6
-#define SENS_Comfort                             3693      // 1 Bit, Bit 5
+#define SENS_Comfort                             6693      // 1 Bit, Bit 5
 #define     SENS_ComfortMask 0x20
 #define     SENS_ComfortShift 5
-#define SENS_Airquality                          3693      // 1 Bit, Bit 4
+#define SENS_Airquality                          6693      // 1 Bit, Bit 4
 #define     SENS_AirqualityMask 0x10
 #define     SENS_AirqualityShift 4
-#define SENS_Accuracy                            3693      // 1 Bit, Bit 3
+#define SENS_Accuracy                            6693      // 1 Bit, Bit 3
 #define     SENS_AccuracyMask 0x08
 #define     SENS_AccuracyShift 3
-#define SENS_DeleteData                          3693      // 1 Bit, Bit 2
+#define SENS_DeleteData                          6693      // 1 Bit, Bit 2
 #define     SENS_DeleteDataMask 0x04
 #define     SENS_DeleteDataShift 2
-#define SENS_TempOffset                          3694      // int8_t
-#define SENS_TempCycleBase                       3695      // 2 Bits, Bit 7-6
+#define SENS_TempOffset                          6694      // int8_t
+#define SENS_TempCycleBase                       6695      // 2 Bits, Bit 7-6
 #define     SENS_TempCycleBaseMask 0xC0
 #define     SENS_TempCycleBaseShift 6
-#define SENS_TempCycleTime                       3695      // 14 Bits, Bit 13-0
+#define SENS_TempCycleTime                       6695      // 14 Bits, Bit 13-0
 #define     SENS_TempCycleTimeMask 0x3FFF
 #define     SENS_TempCycleTimeShift 0
-#define SENS_TempDeltaAbs                        3697      // uint16_t
-#define SENS_TempDeltaPercent                    3699      // uint8_t
-#define SENS_TempSmooth                          3700      // uint8_t
-#define SENS_TempExtCount                        3701      // 2 Bits, Bit 1-0
+#define SENS_TempDeltaAbs                        6697      // uint16_t
+#define SENS_TempDeltaPercent                    6699      // uint8_t
+#define SENS_TempSmooth                          6700      // uint8_t
+#define SENS_TempExtCount                        6701      // 2 Bits, Bit 1-0
 #define     SENS_TempExtCountMask 0x03
 #define     SENS_TempExtCountShift 0
-#define SENS_TempExtRead                         3701      // 1 Bit, Bit 2
+#define SENS_TempExtRead                         6701      // 1 Bit, Bit 2
 #define     SENS_TempExtReadMask 0x04
 #define     SENS_TempExtReadShift 2
-#define SENS_TempIntPercent                      3702      // uint8_t
-#define SENS_TempExt1Percent                     3703      // uint8_t
-#define SENS_TempExt2Percent                     3704      // uint8_t
-#define SENS_HumOffset                           3705      // int8_t
-#define SENS_HumCycleBase                        3706      // 2 Bits, Bit 7-6
+#define SENS_TempIntPercent                      6702      // uint8_t
+#define SENS_TempExt1Percent                     6703      // uint8_t
+#define SENS_TempExt2Percent                     6704      // uint8_t
+#define SENS_HumOffset                           6705      // int8_t
+#define SENS_HumCycleBase                        6706      // 2 Bits, Bit 7-6
 #define     SENS_HumCycleBaseMask 0xC0
 #define     SENS_HumCycleBaseShift 6
-#define SENS_HumCycleTime                        3706      // 14 Bits, Bit 13-0
+#define SENS_HumCycleTime                        6706      // 14 Bits, Bit 13-0
 #define     SENS_HumCycleTimeMask 0x3FFF
 #define     SENS_HumCycleTimeShift 0
-#define SENS_HumDeltaAbs                         3708      // uint16_t
-#define SENS_HumDeltaPercent                     3710      // uint8_t
-#define SENS_HumSmooth                           3711      // uint8_t
-#define SENS_HumExtCount                         3712      // 2 Bits, Bit 1-0
+#define SENS_HumDeltaAbs                         6708      // uint16_t
+#define SENS_HumDeltaPercent                     6710      // uint8_t
+#define SENS_HumSmooth                           6711      // uint8_t
+#define SENS_HumExtCount                         6712      // 2 Bits, Bit 1-0
 #define     SENS_HumExtCountMask 0x03
 #define     SENS_HumExtCountShift 0
-#define SENS_HumExtRead                          3712      // 1 Bit, Bit 2
+#define SENS_HumExtRead                          6712      // 1 Bit, Bit 2
 #define     SENS_HumExtReadMask 0x04
 #define     SENS_HumExtReadShift 2
-#define SENS_HumIntPercent                       3713      // uint8_t
-#define SENS_HumExt1Percent                      3714      // uint8_t
-#define SENS_HumExt2Percent                      3715      // uint8_t
-#define SENS_PreOffset                           3716      // int8_t
-#define SENS_PreCycleBase                        3717      // 2 Bits, Bit 7-6
+#define SENS_HumIntPercent                       6713      // uint8_t
+#define SENS_HumExt1Percent                      6714      // uint8_t
+#define SENS_HumExt2Percent                      6715      // uint8_t
+#define SENS_PreOffset                           6716      // int8_t
+#define SENS_PreCycleBase                        6717      // 2 Bits, Bit 7-6
 #define     SENS_PreCycleBaseMask 0xC0
 #define     SENS_PreCycleBaseShift 6
-#define SENS_PreCycleTime                        3717      // 14 Bits, Bit 13-0
+#define SENS_PreCycleTime                        6717      // 14 Bits, Bit 13-0
 #define     SENS_PreCycleTimeMask 0x3FFF
 #define     SENS_PreCycleTimeShift 0
-#define SENS_PreDeltaAbs                         3719      // uint16_t
-#define SENS_PreDeltaPercent                     3721      // uint8_t
-#define SENS_PreSmooth                           3722      // uint8_t
-#define SENS_PreExtCount                         3723      // 2 Bits, Bit 1-0
+#define SENS_PreDeltaAbs                         6719      // uint16_t
+#define SENS_PreDeltaPercent                     6721      // uint8_t
+#define SENS_PreSmooth                           6722      // uint8_t
+#define SENS_PreExtCount                         6723      // 2 Bits, Bit 1-0
 #define     SENS_PreExtCountMask 0x03
 #define     SENS_PreExtCountShift 0
-#define SENS_PreExtRead                          3723      // 1 Bit, Bit 2
+#define SENS_PreExtRead                          6723      // 1 Bit, Bit 2
 #define     SENS_PreExtReadMask 0x04
 #define     SENS_PreExtReadShift 2
-#define SENS_PreIntPercent                       3724      // uint8_t
-#define SENS_PreExt1Percent                      3725      // uint8_t
-#define SENS_PreExt2Percent                      3726      // uint8_t
-#define SENS_VocOffset                           3727      // int8_t
-#define SENS_VocCycleBase                        3728      // 2 Bits, Bit 7-6
+#define SENS_PreIntPercent                       6724      // uint8_t
+#define SENS_PreExt1Percent                      6725      // uint8_t
+#define SENS_PreExt2Percent                      6726      // uint8_t
+#define SENS_VocOffset                           6727      // int8_t
+#define SENS_VocCycleBase                        6728      // 2 Bits, Bit 7-6
 #define     SENS_VocCycleBaseMask 0xC0
 #define     SENS_VocCycleBaseShift 6
-#define SENS_VocCycleTime                        3728      // 14 Bits, Bit 13-0
+#define SENS_VocCycleTime                        6728      // 14 Bits, Bit 13-0
 #define     SENS_VocCycleTimeMask 0x3FFF
 #define     SENS_VocCycleTimeShift 0
-#define SENS_VocDeltaAbs                         3730      // uint16_t
-#define SENS_VocDeltaPercent                     3732      // uint8_t
-#define SENS_VocSmooth                           3733      // uint8_t
-#define SENS_VocExtCount                         3734      // 2 Bits, Bit 1-0
+#define SENS_VocDeltaAbs                         6730      // uint16_t
+#define SENS_VocDeltaPercent                     6732      // uint8_t
+#define SENS_VocSmooth                           6733      // uint8_t
+#define SENS_VocExtCount                         6734      // 2 Bits, Bit 1-0
 #define     SENS_VocExtCountMask 0x03
 #define     SENS_VocExtCountShift 0
-#define SENS_VocExtRead                          3734      // 1 Bit, Bit 2
+#define SENS_VocExtRead                          6734      // 1 Bit, Bit 2
 #define     SENS_VocExtReadMask 0x04
 #define     SENS_VocExtReadShift 2
-#define SENS_VocIntPercent                       3735      // uint8_t
-#define SENS_VocExt1Percent                      3736      // uint8_t
-#define SENS_VocExt2Percent                      3737      // uint8_t
-#define SENS_Co2Offset                           3738      // int8_t
-#define SENS_Co2CycleBase                        3739      // 2 Bits, Bit 7-6
+#define SENS_VocIntPercent                       6735      // uint8_t
+#define SENS_VocExt1Percent                      6736      // uint8_t
+#define SENS_VocExt2Percent                      6737      // uint8_t
+#define SENS_Co2Offset                           6738      // int8_t
+#define SENS_Co2CycleBase                        6739      // 2 Bits, Bit 7-6
 #define     SENS_Co2CycleBaseMask 0xC0
 #define     SENS_Co2CycleBaseShift 6
-#define SENS_Co2CycleTime                        3739      // 14 Bits, Bit 13-0
+#define SENS_Co2CycleTime                        6739      // 14 Bits, Bit 13-0
 #define     SENS_Co2CycleTimeMask 0x3FFF
 #define     SENS_Co2CycleTimeShift 0
-#define SENS_Co2DeltaAbs                         3741      // uint16_t
-#define SENS_Co2DeltaPercent                     3743      // uint8_t
-#define SENS_Co2Smooth                           3744      // uint8_t
-#define SENS_Co2ExtCount                         3745      // 2 Bits, Bit 1-0
+#define SENS_Co2DeltaAbs                         6741      // uint16_t
+#define SENS_Co2DeltaPercent                     6743      // uint8_t
+#define SENS_Co2Smooth                           6744      // uint8_t
+#define SENS_Co2ExtCount                         6745      // 2 Bits, Bit 1-0
 #define     SENS_Co2ExtCountMask 0x03
 #define     SENS_Co2ExtCountShift 0
-#define SENS_Co2ExtRead                          3745      // 1 Bit, Bit 2
+#define SENS_Co2ExtRead                          6745      // 1 Bit, Bit 2
 #define     SENS_Co2ExtReadMask 0x04
 #define     SENS_Co2ExtReadShift 2
-#define SENS_Co2IntPercent                       3746      // uint8_t
-#define SENS_Co2Ext1Percent                      3747      // uint8_t
-#define SENS_Co2Ext2Percent                      3748      // uint8_t
-#define SENS_DewOffset                           3750      // int8_t
-#define SENS_DewCycleBase                        3751      // 2 Bits, Bit 7-6
+#define SENS_Co2IntPercent                       6746      // uint8_t
+#define SENS_Co2Ext1Percent                      6747      // uint8_t
+#define SENS_Co2Ext2Percent                      6748      // uint8_t
+#define SENS_DewOffset                           6750      // int8_t
+#define SENS_DewCycleBase                        6751      // 2 Bits, Bit 7-6
 #define     SENS_DewCycleBaseMask 0xC0
 #define     SENS_DewCycleBaseShift 6
-#define SENS_DewCycleTime                        3751      // 14 Bits, Bit 13-0
+#define SENS_DewCycleTime                        6751      // 14 Bits, Bit 13-0
 #define     SENS_DewCycleTimeMask 0x3FFF
 #define     SENS_DewCycleTimeShift 0
-#define SENS_DewDeltaAbs                         3753      // uint16_t
-#define SENS_DewDeltaPercent                     3755      // uint8_t
-#define SENS_DewSmooth                           3756      // uint8_t
-#define SENS_LuxOffset                           3757      // int8_t
-#define SENS_LuxCycleBase                        3758      // 2 Bits, Bit 7-6
+#define SENS_DewDeltaAbs                         6753      // uint16_t
+#define SENS_DewDeltaPercent                     6755      // uint8_t
+#define SENS_DewSmooth                           6756      // uint8_t
+#define SENS_LuxOffset                           6757      // int8_t
+#define SENS_LuxCycleBase                        6758      // 2 Bits, Bit 7-6
 #define     SENS_LuxCycleBaseMask 0xC0
 #define     SENS_LuxCycleBaseShift 6
-#define SENS_LuxCycleTime                        3758      // 14 Bits, Bit 13-0
+#define SENS_LuxCycleTime                        6758      // 14 Bits, Bit 13-0
 #define     SENS_LuxCycleTimeMask 0x3FFF
 #define     SENS_LuxCycleTimeShift 0
-#define SENS_LuxDeltaAbs                         3760      // uint16_t
-#define SENS_LuxDeltaPercent                     3762      // uint8_t
-#define SENS_LuxSmooth                           3763      // uint8_t
-#define SENS_LuxExtCount                         3764      // 2 Bits, Bit 1-0
+#define SENS_LuxDeltaAbs                         6760      // uint16_t
+#define SENS_LuxDeltaPercent                     6762      // uint8_t
+#define SENS_LuxSmooth                           6763      // uint8_t
+#define SENS_LuxExtCount                         6764      // 2 Bits, Bit 1-0
 #define     SENS_LuxExtCountMask 0x03
 #define     SENS_LuxExtCountShift 0
-#define SENS_LuxExtRead                          3764      // 1 Bit, Bit 2
+#define SENS_LuxExtRead                          6764      // 1 Bit, Bit 2
 #define     SENS_LuxExtReadMask 0x04
 #define     SENS_LuxExtReadShift 2
-#define SENS_LuxIntPercent                       3765      // uint8_t
-#define SENS_LuxExt1Percent                      3766      // uint8_t
-#define SENS_LuxExt2Percent                      3767      // uint8_t
-#define SENS_TofOffset                           3768      // int8_t
-#define SENS_TofCycleBase                        3769      // 2 Bits, Bit 7-6
+#define SENS_LuxIntPercent                       6765      // uint8_t
+#define SENS_LuxExt1Percent                      6766      // uint8_t
+#define SENS_LuxExt2Percent                      6767      // uint8_t
+#define SENS_TofOffset                           6768      // int8_t
+#define SENS_TofCycleBase                        6769      // 2 Bits, Bit 7-6
 #define     SENS_TofCycleBaseMask 0xC0
 #define     SENS_TofCycleBaseShift 6
-#define SENS_TofCycleTime                        3769      // 14 Bits, Bit 13-0
+#define SENS_TofCycleTime                        6769      // 14 Bits, Bit 13-0
 #define     SENS_TofCycleTimeMask 0x3FFF
 #define     SENS_TofCycleTimeShift 0
-#define SENS_TofDeltaAbs                         3771      // uint16_t
-#define SENS_TofDeltaPercent                     3773      // uint8_t
-#define SENS_TofSmooth                           3774      // uint8_t
-#define SENS_TofExtCount                         3775      // 2 Bits, Bit 1-0
+#define SENS_TofDeltaAbs                         6771      // uint16_t
+#define SENS_TofDeltaPercent                     6773      // uint8_t
+#define SENS_TofSmooth                           6774      // uint8_t
+#define SENS_TofExtCount                         6775      // 2 Bits, Bit 1-0
 #define     SENS_TofExtCountMask 0x03
 #define     SENS_TofExtCountShift 0
-#define SENS_TofExtRead                          3775      // 1 Bit, Bit 2
+#define SENS_TofExtRead                          6775      // 1 Bit, Bit 2
 #define     SENS_TofExtReadMask 0x04
 #define     SENS_TofExtReadShift 2
-#define SENS_TofIntPercent                       3776      // uint8_t
-#define SENS_TofExt1Percent                      3777      // uint8_t
-#define SENS_TofExt2Percent                      3778      // uint8_t
-#define SENS_TempSensor                          3779      // 4 Bits, Bit 7-4
+#define SENS_TofIntPercent                       6776      // uint8_t
+#define SENS_TofExt1Percent                      6777      // uint8_t
+#define SENS_TofExt2Percent                      6778      // uint8_t
+#define SENS_TempSensor                          6779      // 4 Bits, Bit 7-4
 #define     SENS_TempSensorMask 0xF0
 #define     SENS_TempSensorShift 4
-#define SENS_HumSensor                           3779      // 4 Bits, Bit 3-0
+#define SENS_HumSensor                           6779      // 4 Bits, Bit 3-0
 #define     SENS_HumSensorMask 0x0F
 #define     SENS_HumSensorShift 0
-#define SENS_PreSensor                           3780      // 4 Bits, Bit 7-4
+#define SENS_PreSensor                           6780      // 4 Bits, Bit 7-4
 #define     SENS_PreSensorMask 0xF0
 #define     SENS_PreSensorShift 4
-#define SENS_VocSensor                           3780      // 4 Bits, Bit 3-0
+#define SENS_VocSensor                           6780      // 4 Bits, Bit 3-0
 #define     SENS_VocSensorMask 0x0F
 #define     SENS_VocSensorShift 0
-#define SENS_Co2Sensor                           3781      // 4 Bits, Bit 7-4
+#define SENS_Co2Sensor                           6781      // 4 Bits, Bit 7-4
 #define     SENS_Co2SensorMask 0xF0
 #define     SENS_Co2SensorShift 4
-#define SENS_LuxSensor                           3781      // 4 Bits, Bit 3-0
+#define SENS_LuxSensor                           6781      // 4 Bits, Bit 3-0
 #define     SENS_LuxSensorMask 0x0F
 #define     SENS_LuxSensorShift 0
-#define SENS_TofSensor                           3782      // 4 Bits, Bit 7-4
+#define SENS_TofSensor                           6782      // 4 Bits, Bit 7-4
 #define     SENS_TofSensorMask 0xF0
 #define     SENS_TofSensorShift 4
-#define SENS_SCD41MeasureIntervalDelayBase       3783      // 2 Bits, Bit 7-6
+#define SENS_SCD41MeasureIntervalDelayBase       6783      // 2 Bits, Bit 7-6
 #define     SENS_SCD41MeasureIntervalDelayBaseMask 0xC0
 #define     SENS_SCD41MeasureIntervalDelayBaseShift 6
-#define SENS_SCD41MeasureIntervalDelayTime       3783      // 14 Bits, Bit 13-0
+#define SENS_SCD41MeasureIntervalDelayTime       6783      // 14 Bits, Bit 13-0
 #define     SENS_SCD41MeasureIntervalDelayTimeMask 0x3FFF
 #define     SENS_SCD41MeasureIntervalDelayTimeShift 0
-#define SENS_PT1000NumWires                      3785      // 2 Bits, Bit 7-6
+#define SENS_PT1000NumWires                      6785      // 2 Bits, Bit 7-6
 #define     SENS_PT1000NumWiresMask 0xC0
 #define     SENS_PT1000NumWiresShift 6
-#define SENS_PT100PT1000                         3785      // 1 Bit, Bit 5
+#define SENS_PT100PT1000                         6785      // 1 Bit, Bit 5
 #define     SENS_PT100PT1000Mask 0x20
 #define     SENS_PT100PT1000Shift 5
 
@@ -4055,34 +6434,34 @@
 // Art des Analogsensors
 #define ParamSENS_PT100PT1000                         ((bool)(knx.paramByte(SENS_PT100PT1000) & SENS_PT100PT1000Mask))
 
-#define SENS_KoRequestValues 715
-#define SENS_KoError 716
-#define SENS_KoTemp 717
-#define SENS_KoExt1Temp 718
-#define SENS_KoExt2Temp 719
-#define SENS_KoHum 720
-#define SENS_KoExt1Hum 721
-#define SENS_KoExt2Hum 722
-#define SENS_KoPre 723
-#define SENS_KoExt1Pre 724
-#define SENS_KoExt2Pre 725
-#define SENS_KoVoc 726
-#define SENS_KoExt1Voc 727
-#define SENS_KoExt2Voc 728
-#define SENS_KoCo2 729
-#define SENS_KoExt1Co2 731
-#define SENS_KoExt2Co2 732
-#define SENS_KoLux 733
-#define SENS_KoExt1Lux 734
-#define SENS_KoExt2Lux 735
-#define SENS_KoTof 736
-#define SENS_KoExt1Tof 737
-#define SENS_KoExt2Tof 738
-#define SENS_KoCo2b 730
-#define SENS_KoDewpoint 757
-#define SENS_KoComfort 758
-#define SENS_KoAirquality 759
-#define SENS_KoSensorAccuracy 760
+#define SENS_KoRequestValues 935
+#define SENS_KoError 936
+#define SENS_KoTemp 937
+#define SENS_KoExt1Temp 938
+#define SENS_KoExt2Temp 939
+#define SENS_KoHum 940
+#define SENS_KoExt1Hum 941
+#define SENS_KoExt2Hum 942
+#define SENS_KoPre 943
+#define SENS_KoExt1Pre 944
+#define SENS_KoExt2Pre 945
+#define SENS_KoVoc 946
+#define SENS_KoExt1Voc 947
+#define SENS_KoExt2Voc 948
+#define SENS_KoCo2 949
+#define SENS_KoExt1Co2 951
+#define SENS_KoExt2Co2 952
+#define SENS_KoLux 953
+#define SENS_KoExt1Lux 954
+#define SENS_KoExt2Lux 955
+#define SENS_KoTof 956
+#define SENS_KoExt1Tof 957
+#define SENS_KoExt2Tof 958
+#define SENS_KoCo2b 950
+#define SENS_KoDewpoint 977
+#define SENS_KoComfort 978
+#define SENS_KoAirquality 979
+#define SENS_KoSensorAccuracy 980
 
 // Sensorwerte anfordern
 #define KoSENS_RequestValues                       (knx.getGroupObject(SENS_KoRequestValues))
@@ -4090,323 +6469,323 @@
 #define KoSENS_Error                               (knx.getGroupObject(SENS_KoError))
 // Temperatur
 #define KoSENS_Temp                                (knx.getGroupObject(SENS_KoTemp))
-// Extern: Temperatur 1
+// Externer Temperatur 1
 #define KoSENS_Ext1Temp                            (knx.getGroupObject(SENS_KoExt1Temp))
-// Extern: Temperatur 2
+// Externer Temperatur 2
 #define KoSENS_Ext2Temp                            (knx.getGroupObject(SENS_KoExt2Temp))
 // Luftfeuchte
 #define KoSENS_Hum                                 (knx.getGroupObject(SENS_KoHum))
-// Extern: Luftfeuchte 1
+// Externer Luftfeuchte 1
 #define KoSENS_Ext1Hum                             (knx.getGroupObject(SENS_KoExt1Hum))
-// Extern: Luftfeuchte 2
+// Externer Luftfeuchte 2
 #define KoSENS_Ext2Hum                             (knx.getGroupObject(SENS_KoExt2Hum))
 // Luftdruck
 #define KoSENS_Pre                                 (knx.getGroupObject(SENS_KoPre))
-// Extern: Luftdruck 1
+// Externer Luftdruck 1
 #define KoSENS_Ext1Pre                             (knx.getGroupObject(SENS_KoExt1Pre))
-// Extern: Luftdruck 2
+// Externer Luftdruck 2
 #define KoSENS_Ext2Pre                             (knx.getGroupObject(SENS_KoExt2Pre))
 // VOC
 #define KoSENS_Voc                                 (knx.getGroupObject(SENS_KoVoc))
-// Extern: VOC 1
+// Externer VOC 1
 #define KoSENS_Ext1Voc                             (knx.getGroupObject(SENS_KoExt1Voc))
-// Extern: VOC 2
+// Externer VOC 2
 #define KoSENS_Ext2Voc                             (knx.getGroupObject(SENS_KoExt2Voc))
 // CO2
 #define KoSENS_Co2                                 (knx.getGroupObject(SENS_KoCo2))
-// Extern: CO2 1
+// Externer CO2 1
 #define KoSENS_Ext1Co2                             (knx.getGroupObject(SENS_KoExt1Co2))
-// Extern: CO2 2
+// Externer CO2 2
 #define KoSENS_Ext2Co2                             (knx.getGroupObject(SENS_KoExt2Co2))
 // Helligkeit
 #define KoSENS_Lux                                 (knx.getGroupObject(SENS_KoLux))
-// Extern: Helligkeit 1
+// Externer Helligkeit 1
 #define KoSENS_Ext1Lux                             (knx.getGroupObject(SENS_KoExt1Lux))
-// Extern: Helligkeit 2
+// Externer Helligkeit 2
 #define KoSENS_Ext2Lux                             (knx.getGroupObject(SENS_KoExt2Lux))
 // Entfernung
 #define KoSENS_Tof                                 (knx.getGroupObject(SENS_KoTof))
-// Extern: Entfernung 1
+// Externer Entfernung 1
 #define KoSENS_Ext1Tof                             (knx.getGroupObject(SENS_KoExt1Tof))
-// Extern: Entfernung 2
+// Externer Entfernung 2
 #define KoSENS_Ext2Tof                             (knx.getGroupObject(SENS_KoExt2Tof))
 // CO2-VOC
 #define KoSENS_Co2b                                (knx.getGroupObject(SENS_KoCo2b))
 // Taupunkt
 #define KoSENS_Dewpoint                            (knx.getGroupObject(SENS_KoDewpoint))
-// Behaglichkeit
+// Behaglichkeit (2=behaglich, 1=geht noch, 0=unbehaglich)
 #define KoSENS_Comfort                             (knx.getGroupObject(SENS_KoComfort))
 // Luftqualitätsampel (1-6)
 #define KoSENS_Airquality                          (knx.getGroupObject(SENS_KoAirquality))
 // Kalibrierungfortschritt
 #define KoSENS_SensorAccuracy                      (knx.getGroupObject(SENS_KoSensorAccuracy))
 
-#define LOG_VisibleChannels                     3786      // uint8_t
-#define LOG_VacationKo                          3787      // 1 Bit, Bit 7
+#define LOG_VisibleChannels                     6786      // uint8_t
+#define LOG_VacationKo                          6787      // 1 Bit, Bit 7
 #define     LOG_VacationKoMask 0x80
 #define     LOG_VacationKoShift 7
-#define LOG_HolidayKo                           3787      // 1 Bit, Bit 6
+#define LOG_HolidayKo                           6787      // 1 Bit, Bit 6
 #define     LOG_HolidayKoMask 0x40
 #define     LOG_HolidayKoShift 6
-#define LOG_VacationRead                        3787      // 1 Bit, Bit 5
+#define LOG_VacationRead                        6787      // 1 Bit, Bit 5
 #define     LOG_VacationReadMask 0x20
 #define     LOG_VacationReadShift 5
-#define LOG_HolidaySend                         3787      // 1 Bit, Bit 4
+#define LOG_HolidaySend                         6787      // 1 Bit, Bit 4
 #define     LOG_HolidaySendMask 0x10
 #define     LOG_HolidaySendShift 4
-#define LOG_Neujahr                             3788      // 1 Bit, Bit 7
+#define LOG_Neujahr                             6788      // 1 Bit, Bit 7
 #define     LOG_NeujahrMask 0x80
 #define     LOG_NeujahrShift 7
-#define LOG_DreiKoenige                         3788      // 1 Bit, Bit 6
+#define LOG_DreiKoenige                         6788      // 1 Bit, Bit 6
 #define     LOG_DreiKoenigeMask 0x40
 #define     LOG_DreiKoenigeShift 6
-#define LOG_Weiberfastnacht                     3788      // 1 Bit, Bit 5
+#define LOG_Weiberfastnacht                     6788      // 1 Bit, Bit 5
 #define     LOG_WeiberfastnachtMask 0x20
 #define     LOG_WeiberfastnachtShift 5
-#define LOG_Rosenmontag                         3788      // 1 Bit, Bit 4
+#define LOG_Rosenmontag                         6788      // 1 Bit, Bit 4
 #define     LOG_RosenmontagMask 0x10
 #define     LOG_RosenmontagShift 4
-#define LOG_Fastnachtsdienstag                  3788      // 1 Bit, Bit 3
+#define LOG_Fastnachtsdienstag                  6788      // 1 Bit, Bit 3
 #define     LOG_FastnachtsdienstagMask 0x08
 #define     LOG_FastnachtsdienstagShift 3
-#define LOG_Aschermittwoch                      3788      // 1 Bit, Bit 2
+#define LOG_Aschermittwoch                      6788      // 1 Bit, Bit 2
 #define     LOG_AschermittwochMask 0x04
 #define     LOG_AschermittwochShift 2
-#define LOG_Frauentag                           3788      // 1 Bit, Bit 1
+#define LOG_Frauentag                           6788      // 1 Bit, Bit 1
 #define     LOG_FrauentagMask 0x02
 #define     LOG_FrauentagShift 1
-#define LOG_Gruendonnerstag                     3788      // 1 Bit, Bit 0
+#define LOG_Gruendonnerstag                     6788      // 1 Bit, Bit 0
 #define     LOG_GruendonnerstagMask 0x01
 #define     LOG_GruendonnerstagShift 0
-#define LOG_Karfreitag                          3789      // 1 Bit, Bit 7
+#define LOG_Karfreitag                          6789      // 1 Bit, Bit 7
 #define     LOG_KarfreitagMask 0x80
 #define     LOG_KarfreitagShift 7
-#define LOG_Ostersonntag                        3789      // 1 Bit, Bit 6
+#define LOG_Ostersonntag                        6789      // 1 Bit, Bit 6
 #define     LOG_OstersonntagMask 0x40
 #define     LOG_OstersonntagShift 6
-#define LOG_Ostermontag                         3789      // 1 Bit, Bit 5
+#define LOG_Ostermontag                         6789      // 1 Bit, Bit 5
 #define     LOG_OstermontagMask 0x20
 #define     LOG_OstermontagShift 5
-#define LOG_TagDerArbeit                        3789      // 1 Bit, Bit 4
+#define LOG_TagDerArbeit                        6789      // 1 Bit, Bit 4
 #define     LOG_TagDerArbeitMask 0x10
 #define     LOG_TagDerArbeitShift 4
-#define LOG_Himmelfahrt                         3789      // 1 Bit, Bit 3
+#define LOG_Himmelfahrt                         6789      // 1 Bit, Bit 3
 #define     LOG_HimmelfahrtMask 0x08
 #define     LOG_HimmelfahrtShift 3
-#define LOG_Pfingstsonntag                      3789      // 1 Bit, Bit 2
+#define LOG_Pfingstsonntag                      6789      // 1 Bit, Bit 2
 #define     LOG_PfingstsonntagMask 0x04
 #define     LOG_PfingstsonntagShift 2
-#define LOG_Pfingstmontag                       3789      // 1 Bit, Bit 1
+#define LOG_Pfingstmontag                       6789      // 1 Bit, Bit 1
 #define     LOG_PfingstmontagMask 0x02
 #define     LOG_PfingstmontagShift 1
-#define LOG_Fronleichnam                        3789      // 1 Bit, Bit 0
+#define LOG_Fronleichnam                        6789      // 1 Bit, Bit 0
 #define     LOG_FronleichnamMask 0x01
 #define     LOG_FronleichnamShift 0
-#define LOG_Friedensfest                        3790      // 1 Bit, Bit 7
+#define LOG_Friedensfest                        6790      // 1 Bit, Bit 7
 #define     LOG_FriedensfestMask 0x80
 #define     LOG_FriedensfestShift 7
-#define LOG_MariaHimmelfahrt                    3790      // 1 Bit, Bit 6
+#define LOG_MariaHimmelfahrt                    6790      // 1 Bit, Bit 6
 #define     LOG_MariaHimmelfahrtMask 0x40
 #define     LOG_MariaHimmelfahrtShift 6
-#define LOG_DeutscheEinheit                     3790      // 1 Bit, Bit 5
+#define LOG_DeutscheEinheit                     6790      // 1 Bit, Bit 5
 #define     LOG_DeutscheEinheitMask 0x20
 #define     LOG_DeutscheEinheitShift 5
-#define LOG_Reformationstag                     3790      // 1 Bit, Bit 4
+#define LOG_Reformationstag                     6790      // 1 Bit, Bit 4
 #define     LOG_ReformationstagMask 0x10
 #define     LOG_ReformationstagShift 4
-#define LOG_Allerheiligen                       3790      // 1 Bit, Bit 3
+#define LOG_Allerheiligen                       6790      // 1 Bit, Bit 3
 #define     LOG_AllerheiligenMask 0x08
 #define     LOG_AllerheiligenShift 3
-#define LOG_BussBettag                          3790      // 1 Bit, Bit 2
+#define LOG_BussBettag                          6790      // 1 Bit, Bit 2
 #define     LOG_BussBettagMask 0x04
 #define     LOG_BussBettagShift 2
-#define LOG_Advent1                             3790      // 1 Bit, Bit 1
+#define LOG_Advent1                             6790      // 1 Bit, Bit 1
 #define     LOG_Advent1Mask 0x02
 #define     LOG_Advent1Shift 1
-#define LOG_Advent2                             3790      // 1 Bit, Bit 0
+#define LOG_Advent2                             6790      // 1 Bit, Bit 0
 #define     LOG_Advent2Mask 0x01
 #define     LOG_Advent2Shift 0
-#define LOG_Advent3                             3791      // 1 Bit, Bit 7
+#define LOG_Advent3                             6791      // 1 Bit, Bit 7
 #define     LOG_Advent3Mask 0x80
 #define     LOG_Advent3Shift 7
-#define LOG_Advent4                             3791      // 1 Bit, Bit 6
+#define LOG_Advent4                             6791      // 1 Bit, Bit 6
 #define     LOG_Advent4Mask 0x40
 #define     LOG_Advent4Shift 6
-#define LOG_Heiligabend                         3791      // 1 Bit, Bit 5
+#define LOG_Heiligabend                         6791      // 1 Bit, Bit 5
 #define     LOG_HeiligabendMask 0x20
 #define     LOG_HeiligabendShift 5
-#define LOG_Weihnachtstag1                      3791      // 1 Bit, Bit 4
+#define LOG_Weihnachtstag1                      6791      // 1 Bit, Bit 4
 #define     LOG_Weihnachtstag1Mask 0x10
 #define     LOG_Weihnachtstag1Shift 4
-#define LOG_Weihnachtstag2                      3791      // 1 Bit, Bit 3
+#define LOG_Weihnachtstag2                      6791      // 1 Bit, Bit 3
 #define     LOG_Weihnachtstag2Mask 0x08
 #define     LOG_Weihnachtstag2Shift 3
-#define LOG_Silvester                           3791      // 1 Bit, Bit 2
+#define LOG_Silvester                           6791      // 1 Bit, Bit 2
 #define     LOG_SilvesterMask 0x04
 #define     LOG_SilvesterShift 2
-#define LOG_Nationalfeiertag                    3791      // 1 Bit, Bit 1
+#define LOG_Nationalfeiertag                    6791      // 1 Bit, Bit 1
 #define     LOG_NationalfeiertagMask 0x02
 #define     LOG_NationalfeiertagShift 1
-#define LOG_MariaEmpfaengnis                    3791      // 1 Bit, Bit 0
+#define LOG_MariaEmpfaengnis                    6791      // 1 Bit, Bit 0
 #define     LOG_MariaEmpfaengnisMask 0x01
 #define     LOG_MariaEmpfaengnisShift 0
-#define LOG_NationalfeiertagSchweiz             3792      // 1 Bit, Bit 7
+#define LOG_NationalfeiertagSchweiz             6792      // 1 Bit, Bit 7
 #define     LOG_NationalfeiertagSchweizMask 0x80
 #define     LOG_NationalfeiertagSchweizShift 7
-#define LOG_Totensonntag                        3792      // 1 Bit, Bit 6
+#define LOG_Totensonntag                        6792      // 1 Bit, Bit 6
 #define     LOG_TotensonntagMask 0x40
 #define     LOG_TotensonntagShift 6
-#define LOG_Weltkindertag                       3792      // 1 Bit, Bit 5
+#define LOG_Weltkindertag                       6792      // 1 Bit, Bit 5
 #define     LOG_WeltkindertagMask 0x20
 #define     LOG_WeltkindertagShift 5
-#define LOG_UserFormula1                        3793      // char*, 99 Byte
+#define LOG_UserFormula1                        6793      // char*, 99 Byte
 #define     LOG_UserFormula1Length 99
-#define LOG_UserFormula1Active                  3892      // 1 Bit, Bit 7
+#define LOG_UserFormula1Active                  6892      // 1 Bit, Bit 7
 #define     LOG_UserFormula1ActiveMask 0x80
 #define     LOG_UserFormula1ActiveShift 7
-#define LOG_UserFormula2                        3893      // char*, 99 Byte
+#define LOG_UserFormula2                        6893      // char*, 99 Byte
 #define     LOG_UserFormula2Length 99
-#define LOG_UserFormula2Active                  3992      // 1 Bit, Bit 7
+#define LOG_UserFormula2Active                  6992      // 1 Bit, Bit 7
 #define     LOG_UserFormula2ActiveMask 0x80
 #define     LOG_UserFormula2ActiveShift 7
-#define LOG_UserFormula3                        3993      // char*, 99 Byte
+#define LOG_UserFormula3                        6993      // char*, 99 Byte
 #define     LOG_UserFormula3Length 99
-#define LOG_UserFormula3Active                  4092      // 1 Bit, Bit 7
+#define LOG_UserFormula3Active                  7092      // 1 Bit, Bit 7
 #define     LOG_UserFormula3ActiveMask 0x80
 #define     LOG_UserFormula3ActiveShift 7
-#define LOG_UserFormula4                        4093      // char*, 99 Byte
+#define LOG_UserFormula4                        7093      // char*, 99 Byte
 #define     LOG_UserFormula4Length 99
-#define LOG_UserFormula4Active                  4192      // 1 Bit, Bit 7
+#define LOG_UserFormula4Active                  7192      // 1 Bit, Bit 7
 #define     LOG_UserFormula4ActiveMask 0x80
 #define     LOG_UserFormula4ActiveShift 7
-#define LOG_UserFormula5                        4193      // char*, 99 Byte
+#define LOG_UserFormula5                        7193      // char*, 99 Byte
 #define     LOG_UserFormula5Length 99
-#define LOG_UserFormula5Active                  4292      // 1 Bit, Bit 7
+#define LOG_UserFormula5Active                  7292      // 1 Bit, Bit 7
 #define     LOG_UserFormula5ActiveMask 0x80
 #define     LOG_UserFormula5ActiveShift 7
-#define LOG_UserFormula6                        4293      // char*, 99 Byte
+#define LOG_UserFormula6                        7293      // char*, 99 Byte
 #define     LOG_UserFormula6Length 99
-#define LOG_UserFormula6Active                  4392      // 1 Bit, Bit 7
+#define LOG_UserFormula6Active                  7392      // 1 Bit, Bit 7
 #define     LOG_UserFormula6ActiveMask 0x80
 #define     LOG_UserFormula6ActiveShift 7
-#define LOG_UserFormula7                        4393      // char*, 99 Byte
+#define LOG_UserFormula7                        7393      // char*, 99 Byte
 #define     LOG_UserFormula7Length 99
-#define LOG_UserFormula7Active                  4492      // 1 Bit, Bit 7
+#define LOG_UserFormula7Active                  7492      // 1 Bit, Bit 7
 #define     LOG_UserFormula7ActiveMask 0x80
 #define     LOG_UserFormula7ActiveShift 7
-#define LOG_UserFormula8                        4493      // char*, 99 Byte
+#define LOG_UserFormula8                        7493      // char*, 99 Byte
 #define     LOG_UserFormula8Length 99
-#define LOG_UserFormula8Active                  4592      // 1 Bit, Bit 7
+#define LOG_UserFormula8Active                  7592      // 1 Bit, Bit 7
 #define     LOG_UserFormula8ActiveMask 0x80
 #define     LOG_UserFormula8ActiveShift 7
-#define LOG_UserFormula9                        4593      // char*, 99 Byte
+#define LOG_UserFormula9                        7593      // char*, 99 Byte
 #define     LOG_UserFormula9Length 99
-#define LOG_UserFormula9Active                  4692      // 1 Bit, Bit 7
+#define LOG_UserFormula9Active                  7692      // 1 Bit, Bit 7
 #define     LOG_UserFormula9ActiveMask 0x80
 #define     LOG_UserFormula9ActiveShift 7
-#define LOG_UserFormula10                       4693      // char*, 99 Byte
+#define LOG_UserFormula10                       7693      // char*, 99 Byte
 #define     LOG_UserFormula10Length 99
-#define LOG_UserFormula10Active                 4792      // 1 Bit, Bit 7
+#define LOG_UserFormula10Active                 7792      // 1 Bit, Bit 7
 #define     LOG_UserFormula10ActiveMask 0x80
 #define     LOG_UserFormula10ActiveShift 7
-#define LOG_UserFormula11                       4793      // char*, 99 Byte
+#define LOG_UserFormula11                       7793      // char*, 99 Byte
 #define     LOG_UserFormula11Length 99
-#define LOG_UserFormula11Active                 4892      // 1 Bit, Bit 7
+#define LOG_UserFormula11Active                 7892      // 1 Bit, Bit 7
 #define     LOG_UserFormula11ActiveMask 0x80
 #define     LOG_UserFormula11ActiveShift 7
-#define LOG_UserFormula12                       4893      // char*, 99 Byte
+#define LOG_UserFormula12                       7893      // char*, 99 Byte
 #define     LOG_UserFormula12Length 99
-#define LOG_UserFormula12Active                 4992      // 1 Bit, Bit 7
+#define LOG_UserFormula12Active                 7992      // 1 Bit, Bit 7
 #define     LOG_UserFormula12ActiveMask 0x80
 #define     LOG_UserFormula12ActiveShift 7
-#define LOG_UserFormula13                       4993      // char*, 99 Byte
+#define LOG_UserFormula13                       7993      // char*, 99 Byte
 #define     LOG_UserFormula13Length 99
-#define LOG_UserFormula13Active                 5092      // 1 Bit, Bit 7
+#define LOG_UserFormula13Active                 8092      // 1 Bit, Bit 7
 #define     LOG_UserFormula13ActiveMask 0x80
 #define     LOG_UserFormula13ActiveShift 7
-#define LOG_UserFormula14                       5093      // char*, 99 Byte
+#define LOG_UserFormula14                       8093      // char*, 99 Byte
 #define     LOG_UserFormula14Length 99
-#define LOG_UserFormula14Active                 5192      // 1 Bit, Bit 7
+#define LOG_UserFormula14Active                 8192      // 1 Bit, Bit 7
 #define     LOG_UserFormula14ActiveMask 0x80
 #define     LOG_UserFormula14ActiveShift 7
-#define LOG_UserFormula15                       5193      // char*, 99 Byte
+#define LOG_UserFormula15                       8193      // char*, 99 Byte
 #define     LOG_UserFormula15Length 99
-#define LOG_UserFormula15Active                 5292      // 1 Bit, Bit 7
+#define LOG_UserFormula15Active                 8292      // 1 Bit, Bit 7
 #define     LOG_UserFormula15ActiveMask 0x80
 #define     LOG_UserFormula15ActiveShift 7
-#define LOG_UserFormula16                       5293      // char*, 99 Byte
+#define LOG_UserFormula16                       8293      // char*, 99 Byte
 #define     LOG_UserFormula16Length 99
-#define LOG_UserFormula16Active                 5392      // 1 Bit, Bit 7
+#define LOG_UserFormula16Active                 8392      // 1 Bit, Bit 7
 #define     LOG_UserFormula16ActiveMask 0x80
 #define     LOG_UserFormula16ActiveShift 7
-#define LOG_UserFormula17                       5393      // char*, 99 Byte
+#define LOG_UserFormula17                       8393      // char*, 99 Byte
 #define     LOG_UserFormula17Length 99
-#define LOG_UserFormula17Active                 5492      // 1 Bit, Bit 7
+#define LOG_UserFormula17Active                 8492      // 1 Bit, Bit 7
 #define     LOG_UserFormula17ActiveMask 0x80
 #define     LOG_UserFormula17ActiveShift 7
-#define LOG_UserFormula18                       5493      // char*, 99 Byte
+#define LOG_UserFormula18                       8493      // char*, 99 Byte
 #define     LOG_UserFormula18Length 99
-#define LOG_UserFormula18Active                 5592      // 1 Bit, Bit 7
+#define LOG_UserFormula18Active                 8592      // 1 Bit, Bit 7
 #define     LOG_UserFormula18ActiveMask 0x80
 #define     LOG_UserFormula18ActiveShift 7
-#define LOG_UserFormula19                       5593      // char*, 99 Byte
+#define LOG_UserFormula19                       8593      // char*, 99 Byte
 #define     LOG_UserFormula19Length 99
-#define LOG_UserFormula19Active                 5692      // 1 Bit, Bit 7
+#define LOG_UserFormula19Active                 8692      // 1 Bit, Bit 7
 #define     LOG_UserFormula19ActiveMask 0x80
 #define     LOG_UserFormula19ActiveShift 7
-#define LOG_UserFormula20                       5693      // char*, 99 Byte
+#define LOG_UserFormula20                       8693      // char*, 99 Byte
 #define     LOG_UserFormula20Length 99
-#define LOG_UserFormula20Active                 5792      // 1 Bit, Bit 7
+#define LOG_UserFormula20Active                 8792      // 1 Bit, Bit 7
 #define     LOG_UserFormula20ActiveMask 0x80
 #define     LOG_UserFormula20ActiveShift 7
-#define LOG_UserFormula21                       5793      // char*, 99 Byte
+#define LOG_UserFormula21                       8793      // char*, 99 Byte
 #define     LOG_UserFormula21Length 99
-#define LOG_UserFormula21Active                 5892      // 1 Bit, Bit 7
+#define LOG_UserFormula21Active                 8892      // 1 Bit, Bit 7
 #define     LOG_UserFormula21ActiveMask 0x80
 #define     LOG_UserFormula21ActiveShift 7
-#define LOG_UserFormula22                       5893      // char*, 99 Byte
+#define LOG_UserFormula22                       8893      // char*, 99 Byte
 #define     LOG_UserFormula22Length 99
-#define LOG_UserFormula22Active                 5992      // 1 Bit, Bit 7
+#define LOG_UserFormula22Active                 8992      // 1 Bit, Bit 7
 #define     LOG_UserFormula22ActiveMask 0x80
 #define     LOG_UserFormula22ActiveShift 7
-#define LOG_UserFormula23                       5993      // char*, 99 Byte
+#define LOG_UserFormula23                       8993      // char*, 99 Byte
 #define     LOG_UserFormula23Length 99
-#define LOG_UserFormula23Active                 6092      // 1 Bit, Bit 7
+#define LOG_UserFormula23Active                 9092      // 1 Bit, Bit 7
 #define     LOG_UserFormula23ActiveMask 0x80
 #define     LOG_UserFormula23ActiveShift 7
-#define LOG_UserFormula24                       6093      // char*, 99 Byte
+#define LOG_UserFormula24                       9093      // char*, 99 Byte
 #define     LOG_UserFormula24Length 99
-#define LOG_UserFormula24Active                 6192      // 1 Bit, Bit 7
+#define LOG_UserFormula24Active                 9192      // 1 Bit, Bit 7
 #define     LOG_UserFormula24ActiveMask 0x80
 #define     LOG_UserFormula24ActiveShift 7
-#define LOG_UserFormula25                       6193      // char*, 99 Byte
+#define LOG_UserFormula25                       9193      // char*, 99 Byte
 #define     LOG_UserFormula25Length 99
-#define LOG_UserFormula25Active                 6292      // 1 Bit, Bit 7
+#define LOG_UserFormula25Active                 9292      // 1 Bit, Bit 7
 #define     LOG_UserFormula25ActiveMask 0x80
 #define     LOG_UserFormula25ActiveShift 7
-#define LOG_UserFormula26                       6293      // char*, 99 Byte
+#define LOG_UserFormula26                       9293      // char*, 99 Byte
 #define     LOG_UserFormula26Length 99
-#define LOG_UserFormula26Active                 6392      // 1 Bit, Bit 7
+#define LOG_UserFormula26Active                 9392      // 1 Bit, Bit 7
 #define     LOG_UserFormula26ActiveMask 0x80
 #define     LOG_UserFormula26ActiveShift 7
-#define LOG_UserFormula27                       6393      // char*, 99 Byte
+#define LOG_UserFormula27                       9393      // char*, 99 Byte
 #define     LOG_UserFormula27Length 99
-#define LOG_UserFormula27Active                 6492      // 1 Bit, Bit 7
+#define LOG_UserFormula27Active                 9492      // 1 Bit, Bit 7
 #define     LOG_UserFormula27ActiveMask 0x80
 #define     LOG_UserFormula27ActiveShift 7
-#define LOG_UserFormula28                       6493      // char*, 99 Byte
+#define LOG_UserFormula28                       9493      // char*, 99 Byte
 #define     LOG_UserFormula28Length 99
-#define LOG_UserFormula28Active                 6592      // 1 Bit, Bit 7
+#define LOG_UserFormula28Active                 9592      // 1 Bit, Bit 7
 #define     LOG_UserFormula28ActiveMask 0x80
 #define     LOG_UserFormula28ActiveShift 7
-#define LOG_UserFormula29                       6593      // char*, 99 Byte
+#define LOG_UserFormula29                       9593      // char*, 99 Byte
 #define     LOG_UserFormula29Length 99
-#define LOG_UserFormula29Active                 6692      // 1 Bit, Bit 7
+#define LOG_UserFormula29Active                 9692      // 1 Bit, Bit 7
 #define     LOG_UserFormula29ActiveMask 0x80
 #define     LOG_UserFormula29ActiveShift 7
-#define LOG_UserFormula30                       6693      // char*, 99 Byte
+#define LOG_UserFormula30                       9693      // char*, 99 Byte
 #define     LOG_UserFormula30Length 99
-#define LOG_UserFormula30Active                 6792      // 1 Bit, Bit 7
+#define LOG_UserFormula30Active                 9792      // 1 Bit, Bit 7
 #define     LOG_UserFormula30ActiveMask 0x80
 #define     LOG_UserFormula30ActiveShift 7
 
@@ -4655,7 +7034,7 @@
 #define LOG_ChannelCount 3
 
 // Parameter per channel
-#define LOG_ParamBlockOffset 6793
+#define LOG_ParamBlockOffset 9793
 #define LOG_ParamBlockSize 87
 #define LOG_ParamCalcIndex(index) (index + LOG_ParamBlockOffset + _channelIndex * LOG_ParamBlockSize)
 
@@ -6508,10 +8887,10 @@
 #define ParamLOG_fOOffKOSendNumberRel                ((int16_t)knx.paramWord(LOG_ParamCalcIndex(LOG_fOOffKOSendNumberRel)))
 
 // deprecated
-#define LOG_KoOffset 761
+#define LOG_KoOffset 981
 
 // Communication objects per channel (multiple occurrence)
-#define LOG_KoBlockOffset 761
+#define LOG_KoBlockOffset 981
 #define LOG_KoBlockSize 3
 
 #define LOG_KoCalcNumber(index) (index + LOG_KoBlockOffset + _channelIndex * LOG_KoBlockSize)
@@ -6529,7 +8908,7 @@
 // Ausgang
 #define KoLOG_KOfO                                (knx.getGroupObject(LOG_KoCalcNumber(LOG_KoKOfO)))
 
-#define FCB_VisibleChannels                     7054      // uint8_t
+#define FCB_VisibleChannels                     10054      // uint8_t
 
 // Verfügbare Kanäle
 #define ParamFCB_VisibleChannels                     (knx.paramByte(FCB_VisibleChannels))
@@ -6537,7 +8916,7 @@
 #define FCB_ChannelCount 1
 
 // Parameter per channel
-#define FCB_ParamBlockOffset 7055
+#define FCB_ParamBlockOffset 10055
 #define FCB_ParamBlockSize 81
 #define FCB_ParamCalcIndex(index) (index + FCB_ParamBlockOffset + _channelIndex * FCB_ParamBlockSize)
 
@@ -7559,10 +9938,10 @@
 #define ParamFCB_CHFormatBit4                        (knx.paramByte(FCB_ParamCalcIndex(FCB_CHFormatBit4)))
 
 // deprecated
-#define FCB_KoOffset 1060
+#define FCB_KoOffset 1280
 
 // Communication objects per channel (multiple occurrence)
-#define FCB_KoBlockOffset 1060
+#define FCB_KoBlockOffset 1280
 #define FCB_KoBlockSize 10
 
 #define FCB_KoCalcNumber(index) (index + FCB_KoBlockOffset + _channelIndex * FCB_KoBlockSize)
@@ -7609,7 +9988,7 @@
 #define BASE_KommentarModuleModuleParamSize 0
 #define BASE_KommentarModuleSubmodulesParamSize 0
 #define BASE_KommentarModuleParamSize 0
-#define BASE_KommentarModuleParamOffset 7136
+#define BASE_KommentarModuleParamOffset 10136
 #define BASE_KommentarModuleCalcIndex(index, m1) (index + BASE_KommentarModuleParamOffset + _channelIndex * BASE_KommentarModuleCount * BASE_KommentarModuleParamSize + m1 * BASE_KommentarModuleParamSize)
 
 

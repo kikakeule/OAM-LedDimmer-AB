@@ -44,6 +44,10 @@
 		}
 	],
 	"settings": {
+		"C_Cpp.default.configurationProvider": "platformio.platformio-ide",
+		"C_Cpp.default.intelliSenseMode": "windows-gcc-arm",
+		"C_Cpp.intelliSenseEngine": "default",
+		"clangd.enable": false,
 		"files.associations": {
 			"cmath": "cpp",
 			"array": "cpp",

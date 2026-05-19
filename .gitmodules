@@ -1,0 +1,3 @@
+[submodule "tools/OpenKNX-XML-Navigator"]
+	path = tools/OpenKNX-XML-Navigator
+	url = https://github.com/kikakeule/OpenKNX-XML-Navigator.git

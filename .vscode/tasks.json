@@ -44,12 +44,15 @@
         {
             "label": "OpenKNXproducer Dev",
             "type": "shell",
-            "command": "${env:USERPROFILE}/bin/OpenKNXproducer.exe",
+            "command": "powershell",
             "args": [
-                "create",
-                "--Debug",
-                "-h",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "scripts/Invoke-OpenKNXproducerCompat.ps1",
+                "-HeaderFile",
                 "include/knxprod.h",
+                "-XmlFile",
                 "src/LedDimmerAB.xml"
             ],
             "problemMatcher": [],
@@ -60,12 +63,15 @@
         {
             "label": "OpenKNXproducer Release",
             "type": "shell",
-            "command": "${env:USERPROFILE}/bin/OpenKNXproducer.exe",
+            "command": "powershell",
             "args": [
-                "create",
-                "--Debug",
-                "-h",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                "scripts/Invoke-OpenKNXproducerCompat.ps1",
+                "-HeaderFile",
                 "include/knxprod.h",
+                "-XmlFile",
                 "src/LedDimmerAB-Release.xml"
             ],
             "problemMatcher": [],

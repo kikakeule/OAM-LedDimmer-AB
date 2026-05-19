@@ -10,7 +10,7 @@
   <op:ETS
     OpenKnxId="0xAF"
     ApplicationNumber="0x07"
-    ApplicationVersion="3.4"
+    ApplicationVersion="3.9"
     ReplacesVersions="0.0"
     ApplicationRevision="0"
     FirmwareRevision="0"
@@ -53,31 +53,41 @@
     template="../lib/OFM-LedModule/src/Single.templ.xml"
     ModuleType="21"
     KoOffset="30"
-    NumChannels="%LED_SC_NumChannels%" /> <!-- 16 KOs/Ch x 16 = 256 -->
+    NumChannels="%LED_SC_NumChannels%" /> <!-- 25 KOs/Ch x 16 = 400 -->
   
   <op:define prefix="LED_TW" prefixDoc="LED" 
     configTransferName="  TW - Tunable White"
     share="../lib/OFM-LedModule/src/TW.share.xml"
     template="../lib/OFM-LedModule/src/TW.templ.xml"
     ModuleType="22"
-    KoOffset="290"
-    NumChannels="%LED_TW_NumChannels%"/> <!-- 20 KOs/Ch x 8 = 160 -->
+    KoOffset="430"
+    NumChannels="%LED_TW_NumChannels%"/> <!-- 30 KOs/Ch x 8 = 240 -->
 
   <op:define prefix="LED_RGB" prefixDoc="LED" 
     configTransferName="  RGB - Rot/Grün/Blau"
     share="../lib/OFM-LedModule/src/RGB.share.xml"
     template="../lib/OFM-LedModule/src/RGB.templ.xml"
     ModuleType="23"
-    KoOffset="450"
+    KoOffset="670"
     NumChannels="%LED_RGB_NumChannels%"/> <!-- 23 KOs/Ch x 5 = 115 -->
+
+  <op:define prefix="HCL"
+    ModuleType="80"
+    share="../lib/OFM-HclModule/src/HclModule.share.xml"
+    template="../lib/OFM-HclModule/src/HclModule.templ.xml"
+    NumChannels="6"
+    KoSingleOffset="1380"
+    KoOffset="1390">
+    <op:verify File="../lib/OFM-HclModule/library.json" ModuleVersion="%HCL_VerifyVersion%" />
+  </op:define> <!-- 10 globale Reserven + 20 KOs/Ch x 6 = 130 -->
 
   <op:define prefix="SWA"
     ModuleType="30"
     share="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.share.xml"
     template="../lib/OFM-SwitchActuator/src/SwitchActuatorModule.templ.xml"
     NumChannels="1"
-    KoSingleOffset="570"
-    KoOffset="580">
+    KoSingleOffset="790"
+    KoOffset="800">
     <op:verify File="../lib/OFM-SwitchActuator/library.json" ModuleVersion="%SWA_VerifyVersion%" />
   </op:define> <!-- 9 KOs/Ch = 9 -->
 
@@ -85,7 +95,7 @@
     share="../lib/OFM-BinaryInput/src/BinaryInputChannel.share.xml"
     template="../lib/OFM-BinaryInput/src/BinaryInputChannel.templ.xml"
     NumChannels="4"
-    KoOffset="590" >
+    KoOffset="810" >
     <op:verify File="../lib/OFM-BinaryInput/library.json" ModuleVersion="%BI_VerifyVersion%" /> 
   </op:define> <!-- 1 KO/Ch = 4 -->
 
@@ -94,14 +104,14 @@
     share="../lib/OFM-VirtualButton/src/VirtualButton.share.xml"
     template="../lib/OFM-VirtualButton/src/VirtualButton.templ.xml"
     NumChannels="10"
-    KoOffset="595">
+    KoOffset="815">
     <op:verify File="../lib/OFM-VirtualButton/library.json" ModuleVersion="%BTN_VerifyVersion%" /> 
   </op:define> <!-- 12 KOs/Ch = 120 -->
   
   <op:define prefix="SENS"
     ModuleType="60"
     share="../lib/OFM-SensorModule/src/Sensormodul.share.xml"
-    KoSingleOffset="715">
+    KoSingleOffset="935">
     <op:verify File="../lib/OFM-SensorModule/library.json" ModuleVersion="%SENS_VerifyVersion%" />
   </op:define> <!-- 45 KOs -->
 
@@ -110,7 +120,7 @@
     share="../lib/OFM-LogicModule/src/Logikmodul.share.xml"
     template="../lib/OFM-LogicModule/src/Logikmodul.templ.xml"
     NumChannels="3"
-    KoOffset="761">
+    KoOffset="981">
     <op:verify File="../lib/OFM-LogicModule/library.json" ModuleVersion="%LOG_VerifyVersion%" /> 
   </op:define> <!-- 3 KOs/Ch = 297 -->
 
@@ -119,7 +129,7 @@
     share="../lib/OFM-FunctionBlocks/src/FunctionBlocks.share.xml"
     template="../lib/OFM-FunctionBlocks/src/FunctionBlocks.templ.xml"
     NumChannels="1"
-    KoOffset="1060">
+    KoOffset="1280">
     <op:verify File="../lib/OFM-FunctionBlocks/library.json" ModuleVersion="%FCB_VerifyVersion%" /> 
   </op:define> <!-- 10 KOs/Ch = 100 -->
 
@@ -134,6 +144,7 @@
   <op:include href="../lib/OFM-VirtualButton/src/VirtualButton.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="BTN" />
   <op:include href="../lib/OFM-SensorModule/src/Sensormodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="SENS" />
   <op:include href="../lib/OFM-LogicModule/src/Logikmodul.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="LOG" />
+  <op:include href="../lib/OFM-HclModule/src/HclModule.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="HCL" />
   <op:include href="../lib/OFM-FunctionBlocks/src/FunctionBlocks.share.xml" xpath="//ApplicationProgram/Dynamic/*" prefix="FCB" />
   </Dynamic>
 </generate>
